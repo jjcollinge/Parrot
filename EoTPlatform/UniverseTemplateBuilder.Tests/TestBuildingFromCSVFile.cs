@@ -1,9 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
-using System.IO;
-using Common.Services.Models;
 using Newtonsoft.Json;
+using Common.Models;
 
 namespace UniverseTemplateBuilder.Tests
 {

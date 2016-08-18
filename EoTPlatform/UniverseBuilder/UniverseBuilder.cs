@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Fabric;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
-using Common.Services.Interfaces;
-using Common.Services.Models;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
-using Microsoft.ServiceFabric.Actors.Client;
-using Microsoft.ServiceFabric.Actors;
-using System.Fabric.Description;
-using Microsoft.ServiceFabric.Services.Remoting.Client;
+using Common.Interfaces;
+using Common.Models;
 
 namespace UniverseBuilder
 {
@@ -21,14 +15,15 @@ namespace UniverseBuilder
     /// </summary>
     public sealed class UniverseBuilder : StatelessService, IUniverseBuilder
     {
-        private IPlatformWrapper platform;
+        private IPlatformAbstraction platform;
         private IServiceProxyFactory proxyFactory;
 
-        public UniverseBuilder(StatelessServiceContext context, IPlatformWrapper platform, IServiceProxyFactory proxyFactory)
+        public UniverseBuilder(StatelessServiceContext context, IPlatformAbstraction platform, IServiceProxyFactory proxyFactory)
             : base(context)
         {
             this.platform = platform;
             this.proxyFactory = proxyFactory;
+            
         }
 
         public async Task<UniverseDescriptor> BuildUniverseAsync(UniverseTemplate template)
@@ -54,7 +49,7 @@ namespace UniverseBuilder
             var serviceName = new Uri($"fabric:/{appName}/UniverseRegistry{randomPrefix}");
             var serviceTypeName = "UniverseRegistry";
 
-            await platform.BuildServiceAsync(appName, serviceName, serviceTypeName);
+            await platform.BuildServiceAsync(appName, serviceName, serviceTypeName, ServiceContextTypes.Stateful);
 
             var universe = proxyFactory.CreateUniverseRegistryServiceProxy(serviceName);
             await universe.RegisterUniverseAsync(actorTemplates);

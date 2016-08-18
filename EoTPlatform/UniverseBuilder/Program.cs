@@ -4,6 +4,7 @@ using System.Fabric;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Runtime;
+using Common.Services;
 
 namespace UniverseBuilder
 {
@@ -23,7 +24,7 @@ namespace UniverseBuilder
 
 
                 ServiceRuntime.RegisterServiceAsync("UniverseBuilderType",
-                    context => new UniverseBuilder(context, new PlatformWrapper(context), new ServiceProxyFactory())).GetAwaiter().GetResult();
+                    context => new UniverseBuilder(context, new PlatformAbstraction(context), new ServiceProxyFactory())).GetAwaiter().GetResult();
 
                 ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(UniverseBuilder).Name);
 

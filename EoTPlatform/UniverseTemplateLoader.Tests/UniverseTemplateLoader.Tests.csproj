@@ -102,9 +102,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
+    <ProjectReference Include="..\Common.Models\Common.Models.csproj">
+      <Project>{f85cff0c-e291-4abb-bb47-32ccb052ad0a}</Project>
+      <Name>Common.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.Interfaces.csproj">
       <Project>{0ce24254-3fd9-40f7-bf15-f4b159e029c7}</Project>
-      <Name>Common</Name>
+      <Name>Common.Interfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\UniverseTemplateLoader\UniverseTemplateLoader.csproj">
       <Project>{24e27007-f42e-4ff2-b520-1ba80f458995}</Project>

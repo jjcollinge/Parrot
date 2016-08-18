@@ -81,9 +81,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
+    <ProjectReference Include="..\Common.Models\Common.Models.csproj">
+      <Project>{F85CFF0C-E291-4ABB-BB47-32CCB052AD0A}</Project>
+      <Name>Common.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.Interfaces.csproj">
       <Project>{0CE24254-3FD9-40F7-BF15-F4B159E029C7}</Project>
-      <Name>Common</Name>
+      <Name>Common.Interfaces</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

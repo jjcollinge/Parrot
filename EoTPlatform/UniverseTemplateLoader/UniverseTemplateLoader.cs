@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Fabric;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
-using Common.Services.Interfaces;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
-using Common.Services.Models;
 using System.IO;
 using Newtonsoft.Json;
+using Common.Interfaces;
+using Common.Models;
 
 namespace UniverseTemplateLoader
 {

@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Common.Services.Models;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Fabric;
+using Common.Models;
+using Common.Mocks;
 
 namespace UniverseBuilder.Tests
 {
@@ -21,7 +20,7 @@ namespace UniverseBuilder.Tests
                 new ActorTemplate { Id="1", Type="loop", Publishers= new List<string> { "0" } }
             };
 
-            var platform = new MockPlatformWrapper();
+            var platform = new MockPlatformAbstraction();
             var factory = new MockServiceProxyFactory();
             var universeBuilder = new UniverseBuilder(null, platform, factory);
             var universeDescriptor = await universeBuilder.BuildUniverseAsync(universeTemplate);
