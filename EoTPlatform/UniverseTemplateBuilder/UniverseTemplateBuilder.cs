@@ -27,6 +27,12 @@ namespace UniverseTemplateBuilder
             throw new NotImplementedException();
         }
 
+        public async Task BuildUniverseTemplateFromFileAsync(string inputFilePath, string outputFilePath)
+        {
+            var json = await BuildUniverseTemplateFromFileAsync(inputFilePath);
+            System.IO.File.WriteAllText(outputFilePath, json);
+        }
+
         public async Task<string> BuildUniverseTemplateFromFileAsync(string inputPath)
         {
             var actors = await GetActorsFromCSVFileAsync(inputPath);
@@ -114,6 +120,5 @@ namespace UniverseTemplateBuilder
                 new ServiceInstanceListener(context => this.CreateServiceRemotingListener(context))
             };
         }
-
     }
 }
