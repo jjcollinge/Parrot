@@ -43,6 +43,11 @@ namespace UniverseFactory
             var universeBuilder = serviceFactory.CreateUniverseBuilderServiceProxy(universeBuilderAddress);
             var universeDescriptor = await universeBuilder.BuildUniverseAsync(universeTemplate);
 
+            // Register the universe
+            var universeRegistryAddress = new Uri("fabric:/EoTPlatform/UniverseRegistry");
+            var universeRegistry = serviceFactory.CreateUniverseRegistryServiceProxy(universeRegistryAddress);
+            await universeRegistry.RegisterUniverseAsync(universeDescriptor);
+
             // Return descriptor
             return universeDescriptor;
         }

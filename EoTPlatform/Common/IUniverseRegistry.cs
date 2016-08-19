@@ -9,5 +9,7 @@ namespace Common.Interfaces
     {
         Task RegisterUniverseAsync(UniverseDescriptor universe);
         Task DeregisterUniverseAsync(string id);
+
+        Task<Dictionary<string, UniverseDescriptor>> GetUniversesAsync();
     }
 }

@@ -17,9 +17,32 @@ namespace UniverseRegistry
     /// </summary>
     internal sealed class UniverseRegistry : StatefulService, IUniverseRegistry
     {
+        //TODO: Change read/write behaviour to exception proof
+
         public UniverseRegistry(StatefulServiceContext context)
             : base(context)
         { }
+
+        public async Task<Dictionary<string, UniverseDescriptor>> GetUniversesAsync()
+        {
+            var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDescriptor>>("universes");
+            var universesDictionary = new Dictionary<string, UniverseDescriptor>();
+
+            //TODO: Should use immutable types
+            using (var tx = this.StateManager.CreateTransaction())
+            {
+                var enumerable = await universes.CreateEnumerableAsync(tx);
+                var enumerator = enumerable.GetAsyncEnumerator();
+
+                var ct = new CancellationToken();
+                while (await enumerator.MoveNextAsync(ct))
+                {
+                    universesDictionary.Add(enumerator.Current.Key, enumerator.Current.Value);
+                }
+            }
+
+            return universesDictionary;
+        }
 
         public async Task RegisterUniverseAsync(UniverseDescriptor universe)
         {

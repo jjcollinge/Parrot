@@ -19,6 +19,7 @@ namespace UniverseActorRegistry
     internal sealed class UniverseActorRegistry : StatefulService, IUniverseActorRegistry
     {
         //TODO: Consider piggy backging the actor services
+        // Change read/write behaviour to exception proof
 
         public UniverseActorRegistry(StatefulServiceContext context)
             : base(context)

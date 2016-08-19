@@ -1,5 +1,7 @@
 ﻿using Common;
+using Common.Interfaces;
 using Common.Models;
+using Microsoft.ServiceFabric.Services.Client;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using System;
 using System.Collections.Generic;
@@ -15,13 +17,26 @@ namespace TestConsoleApplicationClient
         {
             var success = CreateUniverse();
 
-            if (success)
-                PrintSuccess();
-            else
-                PrintFail();
+            if(success)
+                success = ValidateUniverse();
+
+            PrintResult(success);
 
             PrintNewLine();
             Console.ReadKey();
+        }
+
+        private static bool ValidateUniverse()
+        {
+            var universeRegistryAddress = new Uri("fabric:/EoTPlatform/UniverseRegistry");
+            var universeRegistry = ServiceProxy.Create<IUniverseRegistry>(universeRegistryAddress, new ServicePartitionKey(1L));
+
+            var universes = universeRegistry.GetUniversesAsync().GetAwaiter().GetResult();
+
+            if (universes.Count == 1)
+                return true;
+            else
+                return false;
         }
 
         public static bool CreateUniverse()
@@ -91,14 +106,12 @@ namespace TestConsoleApplicationClient
             Console.WriteLine(Environment.NewLine);
         }
 
-        private static void PrintFail()
+        private static void PrintResult(bool success)
         {
-            Console.WriteLine("FAIL!");
-        }
-
-        private static void PrintSuccess()
-        {
-            Console.WriteLine("SUCCESS!");
+            if(success)
+                Console.WriteLine("SUCCESS!");
+            else
+                Console.WriteLine("FAIL!");
         }
     }
 }

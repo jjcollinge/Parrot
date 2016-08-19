@@ -1,4 +1,5 @@
 ﻿using Common.Interfaces;
+using Microsoft.ServiceFabric.Services.Client;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using System;
 
@@ -8,6 +9,7 @@ namespace Common.Services
     {
         public IUniverseActorRegistry CreateUniverseActorRegistryServiceProxy(Uri serviceAddress)
         {
+            // No partition key needed as currently uses singleton partition scheme
             return ServiceProxy.Create<IUniverseActorRegistry>(serviceAddress);
         }
 
@@ -18,7 +20,8 @@ namespace Common.Services
 
         public IUniverseRegistry CreateUniverseRegistryServiceProxy(Uri serviceAddress)
         {
-            return ServiceProxy.Create<IUniverseRegistry>(serviceAddress);
+            // Uses int64 partition scheme so requires key
+            return ServiceProxy.Create<IUniverseRegistry>(serviceAddress, new ServicePartitionKey(1L));
         }
 
         public IUniverseTemplateBuilder CreateUniverseTemplateBuilderServiceProxy(Uri serviceAddress)

@@ -27,7 +27,6 @@ namespace UniverseBuilder
         {
             this.platform = platform;
             this.proxyFactory = proxyFactory;
-
         }
 
         public async Task<UniverseDescriptor> BuildUniverseAsync(UniverseTemplate template)
@@ -35,7 +34,7 @@ namespace UniverseBuilder
             if (template == null)
                 return null;
 
-            var universeServicesEndpoints = await CreateUniverseServices(template.ActorTemplates);
+            var universeServicesEndpoints = await CreateUniverseServicesAsync(template.ActorTemplates);
 
             // Rather than pass back all the actor ids here, pass back a reference to a stateful service endpoint which has been preloaded with them.
             var universeDescriptor = new UniverseDescriptor
@@ -46,7 +45,7 @@ namespace UniverseBuilder
             return universeDescriptor;
         }
 
-        private async Task<Dictionary<string, List<string>>> CreateUniverseServices(List<ActorTemplate> actorTemplates)
+        private async Task<Dictionary<string, List<string>>> CreateUniverseServicesAsync(List<ActorTemplate> actorTemplates)
         {
             var universeActorRegistryKVP = await CreateUniverseActorRegistryAsync(actorTemplates);
 

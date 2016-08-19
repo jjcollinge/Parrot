@@ -29,7 +29,7 @@ namespace Common.Services
                         HasPersistedState = true,
                         ServiceName = serviceAddress,
                         ServiceTypeName = serviceTypeName,
-                        PartitionSchemeDescription = new SingletonPartitionSchemeDescription() //TODO: Parameterise
+                        PartitionSchemeDescription = new SingletonPartitionSchemeDescription() //TODO: Parameterise and use better partition scheme
                   
                     };
                     await client.ServiceManager.CreateServiceAsync(serviceDescriptor);
@@ -42,7 +42,7 @@ namespace Common.Services
                         InstanceCount = -1,
                         ServiceName = serviceAddress,
                         ServiceTypeName = serviceTypeName,
-                        PartitionSchemeDescription = new SingletonPartitionSchemeDescription() //TODO: Parameterise
+                        PartitionSchemeDescription = new SingletonPartitionSchemeDescription() //TODO: Parameterise and use better partition scheme
                     };
                     await client.ServiceManager.CreateServiceAsync(serviceDescriptor);
                 }
