@@ -68,6 +68,10 @@
       <Project>{0CE24254-3FD9-40F7-BF15-F4B159E029C7}</Project>
       <Name>Common.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UniverseActorRegistry.Mock\UniverseActorRegistry.Mock.csproj">
+      <Project>{FBE15849-FAF5-413A-BEA9-465699E816B7}</Project>
+      <Name>UniverseActorRegistry.Mock</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UniverseBuilder.Mocks\UniverseBuilder.Mocks.csproj">
       <Project>{13D21C27-50FD-4FFD-A4B7-7C9E620D3D08}</Project>
       <Name>UniverseBuilder.Mocks</Name>

@@ -27,11 +27,13 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\UniverseActorRegistry\UniverseActorRegistry.csproj" />
     <ProjectReference Include="..\UniverseBuilder\UniverseBuilder.csproj" />
     <ProjectReference Include="..\UniverseFactory\UniverseFactory.csproj" />
     <ProjectReference Include="..\UniverseRegistry\UniverseRegistry.csproj" />
     <ProjectReference Include="..\UniverseTemplateBuilder\UniverseTemplateBuilder.csproj" />
     <ProjectReference Include="..\UniverseTemplateLoader\UniverseTemplateLoader.csproj" />
+    <ProjectReference Include="..\UniverseWebApi\UniverseWebApi.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <PropertyGroup>

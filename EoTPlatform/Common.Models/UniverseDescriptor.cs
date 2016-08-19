@@ -8,6 +8,6 @@ namespace Common.Models
 {
     public class UniverseDescriptor
     {
-        public Dictionary<string, Uri> ServiceEndpoints { get; set; }
+        public Dictionary<string, List<string>> ServiceEndpoints { get; set; }
     }
 }

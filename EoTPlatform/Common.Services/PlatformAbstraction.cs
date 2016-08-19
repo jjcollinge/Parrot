@@ -30,6 +30,7 @@ namespace Common.Services
                         ServiceName = serviceAddress,
                         ServiceTypeName = serviceTypeName,
                         PartitionSchemeDescription = new SingletonPartitionSchemeDescription() //TODO: Parameterise
+                  
                     };
                     await client.ServiceManager.CreateServiceAsync(serviceDescriptor);
                 }
@@ -41,7 +42,7 @@ namespace Common.Services
                         InstanceCount = -1,
                         ServiceName = serviceAddress,
                         ServiceTypeName = serviceTypeName,
-                        PartitionSchemeDescription = new SingletonPartitionSchemeDescription(), //TODO: Parameterise
+                        PartitionSchemeDescription = new SingletonPartitionSchemeDescription() //TODO: Parameterise
                     };
                     await client.ServiceManager.CreateServiceAsync(serviceDescriptor);
                 }

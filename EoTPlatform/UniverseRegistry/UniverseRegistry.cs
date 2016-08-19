@@ -21,33 +21,26 @@ namespace UniverseRegistry
             : base(context)
         { }
 
-        public Task RegisterActorAsync(string id, string type)
+        public async Task RegisterUniverseAsync(UniverseDescriptor universe)
         {
-            return Task.FromResult(true);
-        }
+            var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDescriptor>>("universes");
 
-        public async Task RegisterUniverseAsync(List<ActorTemplate> actorTemplates)
-        {
-            var universe = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, string>>("universe");
-
-            foreach (var actorTemplate in actorTemplates)
+            using (var tx = this.StateManager.CreateTransaction())
             {
-                using (var tx = this.StateManager.CreateTransaction())
-                {
-                    await universe.SetAsync(tx, actorTemplate.Id, actorTemplate.Type);
-                    await tx.CommitAsync();
-                }
+                await universes.SetAsync(tx, Guid.NewGuid().ToString(), universe);
+                await tx.CommitAsync();
             }
         }
 
-        public Task UnregisterActorAsync(string id)
+        public async Task DeregisterUniverseAsync(string id)
         {
-            return Task.FromResult(true);
-        }
+            var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDescriptor>>("universes");
 
-        public Task UnregisterUniverseAsync()
-        {
-            return Task.FromResult(true);
+            using (var tx = this.StateManager.CreateTransaction())
+            {
+                await universes.TryRemoveAsync(tx, id); //TODO: Handle failure
+                await tx.CommitAsync();
+            }
         }
 
         /// <summary>

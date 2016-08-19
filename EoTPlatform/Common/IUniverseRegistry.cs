@@ -7,9 +7,7 @@ namespace Common.Interfaces
 {
     public interface IUniverseRegistry : IService
     {
-        Task RegisterUniverseAsync(List<ActorTemplate> actorTemplates);
-        Task RegisterActorAsync(string id, string type);
-        Task UnregisterActorAsync(string id);
-        Task UnregisterUniverseAsync();
+        Task RegisterUniverseAsync(UniverseDescriptor universe);
+        Task DeregisterUniverseAsync(string id);
     }
 }

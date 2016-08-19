@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Application xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="fabric:/EoTPlatform" xmlns="http://schemas.microsoft.com/2011/01/fabric">
   <Parameters>
+    <Parameter Name="UniverseActorRegistry_PartitionCount" Value="1" />
+    <Parameter Name="UniverseActorRegistry_MinReplicaSetSize" Value="3" />
+    <Parameter Name="UniverseActorRegistry_TargetReplicaSetSize" Value="3" />
+    <Parameter Name="UniverseWebApi_InstanceCount" Value="-1" />
     <Parameter Name="UniverseFactory_InstanceCount" Value="-1" />
     <Parameter Name="UniverseTemplateBuilder_InstanceCount" Value="-1" />
     <Parameter Name="UniverseRegistry_PartitionCount" Value="1" />

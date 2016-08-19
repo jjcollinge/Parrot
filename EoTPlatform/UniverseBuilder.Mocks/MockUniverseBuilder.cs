@@ -12,10 +12,10 @@ namespace UniverseBuilder.Mocks
     {
         public async Task<UniverseDescriptor> BuildUniverseAsync(UniverseTemplate template)
         {
-            var endpoint = new Uri("fabric:/mock/mock");
+            var endpoints = new List<string> { "fabric:/mock/mock" };
             return new UniverseDescriptor
             {
-                ServiceEndpoints = new Dictionary<string, Uri> { { "mock", endpoint } }
+                ServiceEndpoints = new Dictionary<string, List<string>> { { "mock", endpoints } }
             };
         }
     }

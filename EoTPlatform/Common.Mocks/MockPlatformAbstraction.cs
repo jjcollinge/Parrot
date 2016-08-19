@@ -22,7 +22,7 @@ namespace Common.Mocks
 
         public Task<string> GetServiceContextApplicationNameAsync()
         {
-            return Task.FromResult("mock");
+            return Task.FromResult("fabric:/mock/mock");
         }
     }
 }

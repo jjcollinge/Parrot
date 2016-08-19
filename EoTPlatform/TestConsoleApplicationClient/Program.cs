@@ -16,10 +16,11 @@ namespace TestConsoleApplicationClient
             var success = CreateUniverse();
 
             if (success)
-                Console.WriteLine("Success!");
+                PrintSuccess();
             else
-                Console.WriteLine("Failed!");
+                PrintFail();
 
+            PrintNewLine();
             Console.ReadKey();
         }
 
@@ -39,19 +40,65 @@ namespace TestConsoleApplicationClient
             var universeFactory = ServiceProxy.Create<IUniverseFactory>(universeFactoryAddress);
             var universeDescriptor = universeFactory.CreateUniverseAsync(universeSpecfication).GetAwaiter().GetResult();
 
-            Console.WriteLine("----------------");
-            Console.WriteLine("Created Universe");
-            Console.WriteLine("----------------");
-            Console.WriteLine(Environment.NewLine);
-            Console.WriteLine("Service Endpoints:");
-            foreach (var endpoint in universeDescriptor.ServiceEndpoints)
+            PrintHeader("Created Universe");
+            PrintNewLine();
+            PrintSubHeader("Service Endpoints");
+            foreach (var service in universeDescriptor.ServiceEndpoints)
             {
-                Console.WriteLine(endpoint.Key + " : " + endpoint.Value);
+                var endpoints = service.Value;
+                Console.Write(service.Key + ": ");
+                int i = 1;
+                foreach (var endpoint in endpoints)
+                {
+                    var ep = endpoint;
+
+                    if (endpoints.Count - i != 0)
+                    {
+                        ep += ", ";
+                        i++;
+                    }
+
+                    Console.WriteLine(ep);
+                }
             }
-            Console.WriteLine(Environment.NewLine);
-            Console.WriteLine("----------------");
-            Console.WriteLine(Environment.NewLine);
+            PrintFooter("Created Universe");
             return true;
+        }
+
+        private static void PrintFooter(string text)
+        {
+            PrintNewLine();
+            Console.WriteLine(new String('-', text.Count()));
+            PrintNewLine();
+        }
+
+        private static void PrintSubHeader(string text)
+        {
+            Console.WriteLine($"{text}");
+            PrintNewLine();
+        }
+
+        private static void PrintHeader(string text)
+        {
+            Console.WriteLine(new String('-', text.Count()));
+            Console.WriteLine($"{text}");
+            Console.WriteLine(new String('-', text.Count()));
+            PrintNewLine();
+        }
+
+        private static void PrintNewLine()
+        {
+            Console.WriteLine(Environment.NewLine);
+        }
+
+        private static void PrintFail()
+        {
+            Console.WriteLine("FAIL!");
+        }
+
+        private static void PrintSuccess()
+        {
+            Console.WriteLine("SUCCESS!");
         }
     }
 }

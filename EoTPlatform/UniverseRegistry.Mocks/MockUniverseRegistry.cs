@@ -10,23 +10,12 @@ namespace UniverseRegistry.Mocks
 {
     public class MockUniverseRegistry : IUniverseRegistry
     {
-        public Task RegisterActorAsync(string id, string type)
-        {
-
-            return Task.FromResult(true);
-        }
-
-        public Task RegisterUniverseAsync(List<ActorTemplate> actorTemplates)
+        public Task DeregisterUniverseAsync(string id)
         {
             return Task.FromResult(true);
         }
 
-        public Task UnregisterActorAsync(string id)
-        {
-            return Task.FromResult(true);
-        }
-
-        public Task UnregisterUniverseAsync()
+        public Task RegisterUniverseAsync(UniverseDescriptor universe)
         {
             return Task.FromResult(true);
         }

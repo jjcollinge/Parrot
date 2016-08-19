@@ -6,6 +6,11 @@ namespace Common.Services
 {
     public class ServiceProxyFactory : Interfaces.IServiceProxyFactory
     {
+        public IUniverseActorRegistry CreateUniverseActorRegistryServiceProxy(Uri serviceAddress)
+        {
+            return ServiceProxy.Create<IUniverseActorRegistry>(serviceAddress);
+        }
+
         public IUniverseBuilder CreateUniverseBuilderServiceProxy(Uri serviceAddress)
         {
             return ServiceProxy.Create<IUniverseBuilder>(serviceAddress);

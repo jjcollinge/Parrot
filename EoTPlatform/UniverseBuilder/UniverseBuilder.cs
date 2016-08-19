@@ -7,6 +7,10 @@ using Microsoft.ServiceFabric.Services.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 using Common.Interfaces;
 using Common.Models;
+using Microsoft.ServiceFabric.Services.Communication.Client;
+using Microsoft.ServiceFabric.Services.Client;
+using Common.Services;
+using System.Threading;
 
 namespace UniverseBuilder
 {
@@ -23,7 +27,7 @@ namespace UniverseBuilder
         {
             this.platform = platform;
             this.proxyFactory = proxyFactory;
-            
+
         }
 
         public async Task<UniverseDescriptor> BuildUniverseAsync(UniverseTemplate template)
@@ -42,22 +46,31 @@ namespace UniverseBuilder
             return universeDescriptor;
         }
 
-        private async Task<Dictionary<string, Uri>> CreateUniverseServices(List<ActorTemplate> actorTemplates)
+        private async Task<Dictionary<string, List<string>>> CreateUniverseServices(List<ActorTemplate> actorTemplates)
+        {
+            var universeActorRegistryKVP = await CreateUniverseActorRegistryAsync(actorTemplates);
+
+            return new Dictionary<string, List<string>>
+            {
+                {universeActorRegistryKVP.Key, universeActorRegistryKVP.Value}
+            };
+        }
+
+        private async Task<KeyValuePair<string, List<string>>> CreateUniverseActorRegistryAsync(List<ActorTemplate> actorTemplates)
         {
             var appName = await platform.GetServiceContextApplicationNameAsync();
             var randomPrefix = new Random().Next(0, 99999).ToString();
-            var serviceName = new Uri($"{appName}/UniverseRegistry{randomPrefix}");
-            var serviceTypeName = "UniverseRegistryType";
+            var serviceAddress = $"{appName}/UniverseActorRegistry{randomPrefix}";
+            var serviceName = new Uri(serviceAddress);
+            var serviceTypeName = "UniverseActorRegistryType";
 
+            //TODO: Figure out how we should deal with port contention if running 'n' universes
             await platform.BuildServiceAsync(appName, serviceName, serviceTypeName, ServiceContextTypes.Stateful);
 
-            var universe = proxyFactory.CreateUniverseRegistryServiceProxy(serviceName);
-            await universe.RegisterUniverseAsync(actorTemplates);
+            var universeActorRegistry = proxyFactory.CreateUniverseActorRegistryServiceProxy(serviceName);
+            await universeActorRegistry.RegisterUniverseActorListAsync(actorTemplates);
 
-            return new Dictionary<string, Uri>
-            {
-                { serviceTypeName, serviceName }
-            };
+            return new KeyValuePair<string, List<string>>(serviceTypeName, new List<string> { serviceAddress });
         }
 
         /// <summary>
