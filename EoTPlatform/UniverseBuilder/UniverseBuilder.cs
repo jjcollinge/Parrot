@@ -46,8 +46,8 @@ namespace UniverseBuilder
         {
             var appName = await platform.GetServiceContextApplicationNameAsync();
             var randomPrefix = new Random().Next(0, 99999).ToString();
-            var serviceName = new Uri($"fabric:/{appName}/UniverseRegistry{randomPrefix}");
-            var serviceTypeName = "UniverseRegistry";
+            var serviceName = new Uri($"{appName}/UniverseRegistry{randomPrefix}");
+            var serviceTypeName = "UniverseRegistryType";
 
             await platform.BuildServiceAsync(appName, serviceName, serviceTypeName, ServiceContextTypes.Stateful);
 

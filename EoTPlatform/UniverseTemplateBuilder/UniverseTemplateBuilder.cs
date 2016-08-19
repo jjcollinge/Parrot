@@ -27,13 +27,13 @@ namespace UniverseTemplateBuilder
             throw new NotImplementedException();
         }
 
-        public async Task BuildUniverseTemplateFromFileAsync(string inputFilePath, string outputFilePath)
+        public async Task BuildUniverseTemplateFromCSVAndWriteToJsonFileAsync(string inputFilePath, string outputFilePath)
         {
-            var json = await BuildUniverseTemplateFromFileAsync(inputFilePath);
+            var json = await BuildUniverseTemplateFromCSVAsync(inputFilePath);
             System.IO.File.WriteAllText(outputFilePath, json);
         }
 
-        public async Task<string> BuildUniverseTemplateFromFileAsync(string inputPath)
+        public async Task<string> BuildUniverseTemplateFromCSVAsync(string inputPath)
         {
             var actors = await GetActorsFromCSVFileAsync(inputPath);
             var actorTemplates = new List<ActorTemplate>();

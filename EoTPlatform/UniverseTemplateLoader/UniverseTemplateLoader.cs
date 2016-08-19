@@ -21,7 +21,7 @@ namespace UniverseTemplateLoader
             : base(context)
         { }
 
-        public async Task<UniverseTemplate> LoadTemplateFromFileAsync(string templateFilePath)
+        public async Task<UniverseTemplate> LoadUniversalTemplateFromFileAsync(string templateFilePath)
         {
             //TODO: Add further validation to filepath
             if (templateFilePath == null)

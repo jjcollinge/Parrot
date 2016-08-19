@@ -6,5 +6,8 @@ namespace Common.Interfaces
     public interface IServiceProxyFactory
     {
         IUniverseRegistry CreateUniverseRegistryServiceProxy(Uri serviceAddress);
+        IUniverseBuilder CreateUniverseBuilderServiceProxy(Uri serviceAddress);
+        IUniverseTemplateLoader CreateUniverseTemplateLoaderServiceProxy(Uri serviceAddress);
+        IUniverseTemplateBuilder CreateUniverseTemplateBuilderServiceProxy(Uri serviceAddress);
     }
 }

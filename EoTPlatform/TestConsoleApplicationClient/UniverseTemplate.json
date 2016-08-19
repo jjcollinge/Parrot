@@ -1,0 +1,15 @@
+{
+    "id": "0",
+    "actorTemplates":[
+        {
+            "id": "0",
+            "type": "train",
+            "publishers": ["1"] 
+        },
+        {
+            "id": "1",
+            "type": "trackSection",
+            "publishers": []
+        }
+    ]
+}

@@ -6,6 +6,6 @@ namespace Common.Interfaces
 {
     public interface IUniverseTemplateLoader : IService
     {
-        Task<UniverseTemplate> LoadTemplateFromFileAsync(string templateFilePath);
+        Task<UniverseTemplate> LoadUniversalTemplateFromFileAsync(string templateFilePath);
     }
 }

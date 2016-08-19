@@ -15,7 +15,7 @@ namespace UniverseTemplateBuilder.Tests
         {
             var universeTemplateBuilder = new UniverseTemplateBuilder(null);
             var inputFilePath = $"{GetProjectFilePath()}\\csv\\testData.csv";
-            var universeTemplateJson = await universeTemplateBuilder.BuildUniverseTemplateFromFileAsync(inputFilePath);
+            var universeTemplateJson = await universeTemplateBuilder.BuildUniverseTemplateFromCSVAsync(inputFilePath);
             var universeTemplate = JsonConvert.DeserializeObject<UniverseTemplate>(universeTemplateJson);
 
             Assert.IsNotNull(universeTemplate);
@@ -30,7 +30,7 @@ namespace UniverseTemplateBuilder.Tests
             var universeTemplateBuilder = new UniverseTemplateBuilder(null);
             var inputFilePath = $"{GetProjectFilePath()}\\csv\\testData.csv";
             var outputFilePath = $"{GetProjectFilePath()}\\templates\\outputTemplate.json";
-            await universeTemplateBuilder.BuildUniverseTemplateFromFileAsync(inputFilePath, outputFilePath);
+            await universeTemplateBuilder.BuildUniverseTemplateFromCSVAndWriteToJsonFileAsync(inputFilePath, outputFilePath);
 
             Assert.IsTrue(File.Exists(outputFilePath));
 

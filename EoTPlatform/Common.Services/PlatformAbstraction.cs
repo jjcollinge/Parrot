@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace Common.Services
 {
+    //TODO: Consider packaging into NuGet
+
     public class PlatformAbstraction : IPlatformAbstraction
     {
         ServiceContext context;
@@ -26,7 +28,8 @@ namespace Common.Services
                         ApplicationName = new Uri(applicationName),
                         HasPersistedState = true,
                         ServiceName = serviceAddress,
-                        ServiceTypeName = serviceTypeName
+                        ServiceTypeName = serviceTypeName,
+                        PartitionSchemeDescription = new SingletonPartitionSchemeDescription() //TODO: Parameterise
                     };
                     await client.ServiceManager.CreateServiceAsync(serviceDescriptor);
                 }
@@ -37,7 +40,8 @@ namespace Common.Services
                         ApplicationName = new Uri(applicationName),
                         InstanceCount = -1,
                         ServiceName = serviceAddress,
-                        ServiceTypeName = serviceTypeName
+                        ServiceTypeName = serviceTypeName,
+                        PartitionSchemeDescription = new SingletonPartitionSchemeDescription(), //TODO: Parameterise
                     };
                     await client.ServiceManager.CreateServiceAsync(serviceDescriptor);
                 }

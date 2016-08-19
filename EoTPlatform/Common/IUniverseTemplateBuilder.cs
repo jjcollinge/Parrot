@@ -6,7 +6,7 @@ namespace Common.Interfaces
     public interface IUniverseTemplateBuilder : IService
     {
         Task<string> BuildUniverseTemplateFromEndpointAsync(string sourceUrl);
-        Task<string> BuildUniverseTemplateFromFileAsync(string inputFilePath);
-        Task BuildUniverseTemplateFromFileAsync(string inputFilePath, string outputFilePath);
+        Task<string> BuildUniverseTemplateFromCSVAsync(string inputFilePath);
+        Task BuildUniverseTemplateFromCSVAndWriteToJsonFileAsync(string inputFilePath, string outputFilePath);
     }
 }

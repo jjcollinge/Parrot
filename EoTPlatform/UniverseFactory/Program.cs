@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Fabric;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Runtime;
+using Common.Services;
 
-namespace UniverseRegistry
+namespace UniverseFactory
 {
     internal static class Program
     {
@@ -20,11 +22,10 @@ namespace UniverseRegistry
                 // When Service Fabric creates an instance of this service type,
                 // an instance of the class is created in this host process.
 
-                //TODO: Remove default services
-                ServiceRuntime.RegisterServiceAsync("UniverseRegistryType",
-                    context => new UniverseRegistry(context)).GetAwaiter().GetResult();
+                ServiceRuntime.RegisterServiceAsync("UniverseFactoryType",
+                    context => new UniverseFactory(context, new ServiceProxyFactory())).GetAwaiter().GetResult();
 
-                ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(UniverseRegistry).Name);
+                ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(UniverseFactory).Name);
 
                 // Prevents this host process from terminating so services keep running.
                 Thread.Sleep(Timeout.Infinite);

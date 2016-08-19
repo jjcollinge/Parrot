@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="IPlatformAbstraction.cs" />
     <Compile Include="IServiceProxyFactory.cs" />
+    <Compile Include="IUniverseFactory.cs" />
     <Compile Include="IUniverseRegistry.cs" />
     <Compile Include="IUniverseTemplateBuilder.cs" />
     <Compile Include="IUniverseTemplateLoader.cs" />
