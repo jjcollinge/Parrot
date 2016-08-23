@@ -58,6 +58,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActorRelationship.cs" />
     <Compile Include="ActorTemplate.cs" />
     <Compile Include="UniverseDescriptor.cs" />
     <Compile Include="UniverseSpecification.cs" />

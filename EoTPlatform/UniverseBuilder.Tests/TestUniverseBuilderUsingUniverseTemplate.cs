@@ -14,10 +14,11 @@ namespace UniverseBuilder.Tests
         {
             var universeTemplate = new UniverseTemplate();
             universeTemplate.Id = "0";
+            universeTemplate.Version = "0.1";
             universeTemplate.ActorTemplates = new List<ActorTemplate>
             {
-                new ActorTemplate { Id="0", Type="train", Publishers= new List<string> { "1" } },
-                new ActorTemplate { Id="1", Type="loop", Publishers= new List<string> { "0" } }
+                new ActorTemplate { Id = "0", Type = "mock", Relationships = new List<ActorRelationship>(), Metadata = new Dictionary<string, string>(), Properties = new Dictionary<string, string>(), Mobility = "static" },
+                new ActorTemplate { Id = "1", Type = "mock", Relationships = new List<ActorRelationship>(), Metadata = new Dictionary<string, string>(), Properties = new Dictionary<string, string>(), Mobility = "dynamic" }
             };
 
             var platform = new MockPlatformAbstraction();

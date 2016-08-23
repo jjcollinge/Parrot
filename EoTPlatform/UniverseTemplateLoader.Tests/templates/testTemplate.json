@@ -1,15 +1,50 @@
 {
-    "id": "0",
+    "id": "universe123124",
+    "version": "0.1",
     "actorTemplates":[
         {
             "id": "0",
+            "mobility": "1",
             "type": "train",
-            "publishers": ["1"] 
+            "relationships": [{
+                "consumers": ["1"],
+                "publishers": [],
+                "description": "Some description"
+            }],
+            "metadata": {
+                "country": "UK",
+                "route": "R12",
+                "section": "S22",
+                "mdu": "mdu33"
+            },
+            "properties": {
+                "x": "1.2",
+                "xunit": "mph",
+                "y": "99",
+                "yunit": "m"
+            }
         },
         {
             "id": "1",
+            "mobility": "0",
             "type": "trackSection",
-            "publishers": []
+            "relationships": [{
+                "consumers": ["0"],
+                "publishers": [],
+                "description": "Some other description"
+            }],
+            "metadata": {
+                "country": "UK",
+                "route": "R12",
+                "section": "S22",
+                "mdu": "mdu33"
+            },
+            "properties": {
+                "x": "5.1",
+                "xunit": "mph",
+                "y": "99",
+                "yunit": "m"
+            }
         }
     ]
 }

@@ -9,12 +9,15 @@ namespace UniverseTemplateLoader.Tests
     [TestClass]
     public class TestLoadJsonTemplate
     {
+        private static string testTemplateId = "universe123124";
+        private static string testFileName = "testTemplate.json";
+
         [TestMethod]
         public async Task LoadJsonTemplateFromFileAsync()
         {
             UniverseTemplateLoader loader = new UniverseTemplateLoader(null);
             var template = await loader.LoadUniversalTemplateFromFileAsync($"{GetTemplatePath("testTemplate.json")}");
-            Assert.IsTrue(template.Id == "0");
+            Assert.IsTrue(template.Id == testTemplateId);
             Assert.IsNotNull(template.ActorTemplates);
         }
 
@@ -22,15 +25,15 @@ namespace UniverseTemplateLoader.Tests
         public async Task LoadJsonTemplateFromFileAndCheckTemplateName()
         {
             UniverseTemplateLoader loader = new UniverseTemplateLoader(null);
-            var template = await loader.LoadUniversalTemplateFromFileAsync($"{GetTemplatePath("testTemplate.json")}");
-            Assert.IsTrue(template.Id == "0");
+            var template = await loader.LoadUniversalTemplateFromFileAsync(GetTemplatePath(testFileName));
+            Assert.IsTrue(template.Id == testTemplateId);
         }
 
         [TestMethod]
         public async Task LoadJsonTemplateFromFileAndCheckActorTypeTemplateCountAsync()
         {
             UniverseTemplateLoader loader = new UniverseTemplateLoader(null);
-            var template = await loader.LoadUniversalTemplateFromFileAsync($"{GetTemplatePath("testTemplate.json")}");
+            var template = await loader.LoadUniversalTemplateFromFileAsync(GetTemplatePath(testFileName));
             Assert.IsTrue(template.ActorTemplates.Count == 2);
         }
 

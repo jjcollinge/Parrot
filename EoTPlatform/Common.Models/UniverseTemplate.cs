@@ -9,6 +9,7 @@ namespace Common.Models
     public class UniverseTemplate
     {
         public string Id { get; set; }
+        public string Version { get; set; }
         public List<ActorTemplate> ActorTemplates { get; set; }
     }
 }

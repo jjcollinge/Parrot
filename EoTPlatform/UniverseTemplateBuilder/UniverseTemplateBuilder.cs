@@ -43,8 +43,7 @@ namespace UniverseTemplateBuilder
                 var template = new ActorTemplate
                 {
                     Id = actor.Key,
-                    Type = actor.Value,
-                    Publishers = new List<string>()
+                    Type = actor.Value
                 };
                 actorTemplates.Add(template);
             }
