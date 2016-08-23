@@ -18,6 +18,10 @@ namespace UniverseTemplateBuilder
     /// </summary>
     public sealed class UniverseTemplateBuilder : StatelessService, IUniverseTemplateBuilder
     {
+        /**
+         * WARNING: This service is now obsolete
+         **/
+
         public UniverseTemplateBuilder(StatelessServiceContext context)
             : base(context)
         { }
@@ -40,11 +44,10 @@ namespace UniverseTemplateBuilder
 
             foreach (var actor in actors)
             {
-                var template = new ActorTemplate
-                {
-                    Id = actor.Key,
-                    Type = actor.Value
-                };
+                var template = new ActorTemplate();
+                template.Id = actor.Key;
+                template.Metadata.Add("value", actor.Value);
+
                 actorTemplates.Add(template);
             }
 

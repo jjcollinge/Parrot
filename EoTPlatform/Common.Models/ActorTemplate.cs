@@ -20,11 +20,16 @@ namespace Common.Models
 
     public class ActorTemplate
     {
+        public ActorTemplate()
+        {
+            Metadata = new Dictionary<string, string>();
+            Properties = new Dictionary<string, string>();
+            Commands = new List<string>();
+        }
+
         public string Id { get; set; }
-        public string Type { get; set; }
-        public string Mobility { get; set; }
-        public List<ActorRelationship> Relationships { get; set; }
         public Dictionary<string, string> Metadata { get; set; }
         public Dictionary<string, string> Properties { get; set; }
+        public List<string> Commands { get; set; }
     }
 }

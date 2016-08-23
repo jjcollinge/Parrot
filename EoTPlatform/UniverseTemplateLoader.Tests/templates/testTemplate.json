@@ -4,13 +4,6 @@
     "actorTemplates":[
         {
             "id": "0",
-            "mobility": "1",
-            "type": "train",
-            "relationships": [{
-                "consumers": ["1"],
-                "publishers": [],
-                "description": "Some description"
-            }],
             "metadata": {
                 "country": "UK",
                 "route": "R12",
@@ -18,33 +11,22 @@
                 "mdu": "mdu33"
             },
             "properties": {
-                "x": "1.2",
-                "xunit": "mph",
-                "f": "2",
-                "funit": "hz"
-            }
-        },
-        {
-            "id": "1",
-            "mobility": "0",
-            "type": "trackSection",
-            "relationships": [{
-                "consumers": ["0"],
-                "publishers": [],
-                "description": "Some other description"
-            }],
-            "metadata": {
-                "country": "UK",
-                "route": "R12",
-                "section": "S22",
-                "mdu": "mdu33"
+                "x": {
+                    "value": "3",
+                    "type": "int",
+                    "unit": "m"
+                },
+                "y": {
+                    "value": "9.2",
+                    "type": "double",
+                    "unit": "mph"
+                }
             },
-            "properties": {
-                "x": "5.1",
-                "xunit": "mph",
-                "f": "50",
-                "funit": "hz"
-            }
+            "commands": [
+                "restart",
+                "enable",
+                "disable"
+            ]
         }
     ]
 }
