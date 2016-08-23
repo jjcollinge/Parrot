@@ -3,7 +3,7 @@
     "version": "0.1",
     "actorTemplates":[
         {
-            "id": "0",
+            "id": "ABC123",
             "metadata": {
                 "country": "UK",
                 "route": "R12",
