@@ -10,5 +10,6 @@ namespace Common.Interfaces
         IUniverseBuilder CreateUniverseBuilderServiceProxy(Uri serviceAddress);
         IUniverseTemplateLoader CreateUniverseTemplateLoaderServiceProxy(Uri serviceAddress);
         IUniverseTemplateBuilder CreateUniverseTemplateBuilderServiceProxy(Uri serviceAddress);
+        IUniverseFactory CreateUniverseFactory(Uri serviceAddress);
     }
 }

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3CCE72BC-E363-4DB6-B963-B39D2140BCDF}</ProjectGuid>
+    <ProjectGuid>{094BC701-5C55-45D6-A644-AB3EC8F701EE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Common.Mocks</RootNamespace>
-    <AssemblyName>Common.Mocks</AssemblyName>
+    <RootNamespace>MockUniverseFactory</RootNamespace>
+    <AssemblyName>MockUniverseFactory</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -35,63 +35,12 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MockPlatformAbstraction.cs" />
-    <Compile Include="MockServiceProxyFactory.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Common\Common.Interfaces.csproj">
-      <Project>{0CE24254-3FD9-40F7-BF15-F4B159E029C7}</Project>
-      <Name>Common.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MockUniverseFactory\UniverseFactory.Mocks.csproj">
-      <Project>{094BC701-5C55-45D6-A644-AB3EC8F701EE}</Project>
-      <Name>UniverseFactory.Mocks</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\UniverseActorRegistry.Mock\UniverseActorRegistry.Mock.csproj">
-      <Project>{FBE15849-FAF5-413A-BEA9-465699E816B7}</Project>
-      <Name>UniverseActorRegistry.Mock</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\UniverseBuilder.Mocks\UniverseBuilder.Mocks.csproj">
-      <Project>{13D21C27-50FD-4FFD-A4B7-7C9E620D3D08}</Project>
-      <Name>UniverseBuilder.Mocks</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\UniverseRegistry.Mocks\UniverseRegistry.Mocks.csproj">
-      <Project>{5A7C316C-602B-44B6-B684-175D9845AE60}</Project>
-      <Name>UniverseRegistry.Mocks</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\UniverseTemplateBuilder.Mocks\UniverseTemplateBuilder.Mocks.csproj">
-      <Project>{DF5EAA0B-5214-43BE-96C4-AAEA031B5B62}</Project>
-      <Name>UniverseTemplateBuilder.Mocks</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\UniverseTemplateLoader.Mocks\UniverseTemplateLoader.Mocks.csproj">
-      <Project>{B73D9207-D2C5-4F08-B404-206C485053A4}</Project>
-      <Name>UniverseTemplateLoader.Mocks</Name>
-    </ProjectReference>
+    <Compile Include="MockUniverseFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.ServiceFabric.Data, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
@@ -124,6 +73,16 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Models\Common.Models.csproj">
+      <Project>{f85cff0c-e291-4abb-bb47-32ccb052ad0a}</Project>
+      <Name>Common.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.Interfaces.csproj">
+      <Project>{0CE24254-3FD9-40F7-BF15-F4B159E029C7}</Project>
+      <Name>Common.Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

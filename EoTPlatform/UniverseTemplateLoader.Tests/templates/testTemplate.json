@@ -20,8 +20,8 @@
             "properties": {
                 "x": "1.2",
                 "xunit": "mph",
-                "y": "99",
-                "yunit": "m"
+                "f": "2",
+                "funit": "hz"
             }
         },
         {
@@ -42,8 +42,8 @@
             "properties": {
                 "x": "5.1",
                 "xunit": "mph",
-                "y": "99",
-                "yunit": "m"
+                "f": "50",
+                "funit": "hz"
             }
         }
     ]

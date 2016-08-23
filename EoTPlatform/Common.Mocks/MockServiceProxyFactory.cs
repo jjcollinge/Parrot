@@ -4,7 +4,8 @@ using UniverseRegistry.Mocks;
 using UniverseBuilder.Mocks;
 using UniverseTemplateBuilder.Mocks;
 using UniverseTemplateLoader.Mocks;
-using UniverseActorRegistry.Mock;
+using UniverseActorRegistry.Mocks;
+using UniverseFactory.Mocks;
 
 namespace Common.Mocks
 {
@@ -18,6 +19,11 @@ namespace Common.Mocks
         public IUniverseBuilder CreateUniverseBuilderServiceProxy(Uri serviceAddress)
         {
             return new MockUniverseBuilder();
+        }
+
+        public IUniverseFactory CreateUniverseFactory(Uri serviceAddress)
+        {
+            return new MockUniverseFactory();
         }
 
         public IUniverseRegistry CreateUniverseRegistryServiceProxy(Uri serviceAddress)

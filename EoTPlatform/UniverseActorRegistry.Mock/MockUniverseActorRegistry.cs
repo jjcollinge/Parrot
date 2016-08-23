@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UniverseActorRegistry.Mock
+namespace UniverseActorRegistry.Mocks
 {
     public class MockUniverseActorRegistry : IUniverseActorRegistry
     {

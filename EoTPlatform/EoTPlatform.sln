@@ -49,6 +49,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniverseActorRegistry.Mock"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniverseActorRegistry.Tests", "UniverseActorRegistry.Tests\UniverseActorRegistry.Tests.csproj", "{715CFCE0-9819-42A8-BE44-7CA8160DD87E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniverseFactory.Mocks", "MockUniverseFactory\UniverseFactory.Mocks.csproj", "{094BC701-5C55-45D6-A644-AB3EC8F701EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -228,6 +230,14 @@ Global
 		{715CFCE0-9819-42A8-BE44-7CA8160DD87E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{715CFCE0-9819-42A8-BE44-7CA8160DD87E}.Release|x64.ActiveCfg = Release|Any CPU
 		{715CFCE0-9819-42A8-BE44-7CA8160DD87E}.Release|x64.Build.0 = Release|Any CPU
+		{094BC701-5C55-45D6-A644-AB3EC8F701EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{094BC701-5C55-45D6-A644-AB3EC8F701EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{094BC701-5C55-45D6-A644-AB3EC8F701EE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{094BC701-5C55-45D6-A644-AB3EC8F701EE}.Debug|x64.Build.0 = Debug|Any CPU
+		{094BC701-5C55-45D6-A644-AB3EC8F701EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{094BC701-5C55-45D6-A644-AB3EC8F701EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{094BC701-5C55-45D6-A644-AB3EC8F701EE}.Release|x64.ActiveCfg = Release|Any CPU
+		{094BC701-5C55-45D6-A644-AB3EC8F701EE}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

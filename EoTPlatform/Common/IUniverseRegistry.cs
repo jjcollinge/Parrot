@@ -11,5 +11,7 @@ namespace Common.Interfaces
         Task DeregisterUniverseAsync(string id);
 
         Task<Dictionary<string, UniverseDescriptor>> GetUniversesAsync();
+
+        Task<UniverseDescriptor> GetUniverseAsync(string universeId);
     }
 }

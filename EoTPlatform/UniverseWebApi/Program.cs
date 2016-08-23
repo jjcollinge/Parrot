@@ -4,6 +4,8 @@ using System.Fabric;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Runtime;
+using UniverseWebApi.Services;
+using Common.Services;
 
 namespace UniverseWebApi
 {
@@ -22,7 +24,7 @@ namespace UniverseWebApi
                 // an instance of the class is created in this host process.
 
                 ServiceRuntime.RegisterServiceAsync("UniverseWebApiType",
-                    context => new UniverseWebApi(context)).GetAwaiter().GetResult();
+                    context => new UniverseWebApi(context, new UniverseManagementService(new ServiceProxyFactory()))).GetAwaiter().GetResult();
 
                 ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(UniverseWebApi).Name);
 

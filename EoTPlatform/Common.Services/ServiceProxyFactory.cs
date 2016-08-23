@@ -18,6 +18,11 @@ namespace Common.Services
             return ServiceProxy.Create<IUniverseBuilder>(serviceAddress);
         }
 
+        public IUniverseFactory CreateUniverseFactory(Uri serviceAddress)
+        {
+            return ServiceProxy.Create<IUniverseFactory>(serviceAddress);
+        }
+
         public IUniverseRegistry CreateUniverseRegistryServiceProxy(Uri serviceAddress)
         {
             // Uses int64 partition scheme so requires key

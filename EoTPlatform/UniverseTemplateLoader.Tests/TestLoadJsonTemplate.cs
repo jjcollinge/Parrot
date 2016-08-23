@@ -16,7 +16,7 @@ namespace UniverseTemplateLoader.Tests
         public async Task LoadJsonTemplateFromFileAsync()
         {
             UniverseTemplateLoader loader = new UniverseTemplateLoader(null);
-            var template = await loader.LoadUniversalTemplateFromFileAsync($"{GetTemplatePath("testTemplate.json")}");
+            var template = await loader.LoadUniversalTemplateFromFileAsync(GetTemplatePath(testFileName));
             Assert.IsTrue(template.Id == testTemplateId);
             Assert.IsNotNull(template.ActorTemplates);
         }

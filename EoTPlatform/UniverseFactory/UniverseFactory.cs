@@ -16,7 +16,7 @@ namespace UniverseFactory
     /// <summary>
     /// An instance of this class is created for each service instance by the Service Fabric runtime.
     /// </summary>
-    internal sealed class UniverseFactory : StatelessService, IUniverseFactory
+    public sealed class UniverseFactory : StatelessService, IUniverseFactory
     {
         //TODO: Consider packaging into NuGet
         private IServiceProxyFactory serviceFactory;

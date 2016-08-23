@@ -15,6 +15,11 @@ namespace UniverseRegistry.Mocks
             return Task.FromResult(true);
         }
 
+        public Task<UniverseDescriptor> GetUniverseAsync(string universeId)
+        {
+            return Task.FromResult(new UniverseDescriptor(new Dictionary<string, List<string>>()));
+        }
+
         public Task<Dictionary<string, UniverseDescriptor>> GetUniversesAsync()
         {
             return Task.FromResult(new Dictionary<string, UniverseDescriptor>());

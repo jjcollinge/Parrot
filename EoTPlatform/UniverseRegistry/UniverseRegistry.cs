@@ -15,7 +15,7 @@ namespace UniverseRegistry
     /// <summary>
     /// An instance of this class is created for each service replica by the Service Fabric runtime.
     /// </summary>
-    internal sealed class UniverseRegistry : StatefulService, IUniverseRegistry
+    public sealed class UniverseRegistry : StatefulService, IUniverseRegistry
     {
         //TODO: Change read/write behaviour to exception proof
 
@@ -50,8 +50,12 @@ namespace UniverseRegistry
 
             using (var tx = this.StateManager.CreateTransaction())
             {
-                await universes.SetAsync(tx, Guid.NewGuid().ToString(), universe);
-                await tx.CommitAsync();
+                var alreadyExists = await universes.ContainsKeyAsync(tx, universe.Id);
+                if (!alreadyExists)
+                {
+                    await universes.AddAsync(tx, universe.Id, universe);
+                    await tx.CommitAsync();
+                }
             }
         }
 
@@ -64,6 +68,20 @@ namespace UniverseRegistry
                 await universes.TryRemoveAsync(tx, id); //TODO: Handle failure
                 await tx.CommitAsync();
             }
+        }
+
+        public async Task<UniverseDescriptor> GetUniverseAsync(string universeId)
+        {
+            var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDescriptor>>("universes");
+
+            UniverseDescriptor descriptor = null;
+            using (var tx = this.StateManager.CreateTransaction())
+            {
+                var res = await universes.TryGetValueAsync(tx, universeId);
+                if (res.HasValue)
+                    descriptor = res.Value;
+            }
+            return descriptor;
         }
 
         /// <summary>

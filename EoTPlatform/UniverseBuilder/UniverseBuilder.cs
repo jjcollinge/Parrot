@@ -37,10 +37,7 @@ namespace UniverseBuilder
             var universeServicesEndpoints = await CreateUniverseServicesAsync(template.ActorTemplates);
 
             // Rather than pass back all the actor ids here, pass back a reference to a stateful service endpoint which has been preloaded with them.
-            var universeDescriptor = new UniverseDescriptor
-            {
-                ServiceEndpoints = universeServicesEndpoints
-            };
+            var universeDescriptor = new UniverseDescriptor(universeServicesEndpoints);
 
             return universeDescriptor;
         }

@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
+using UniverseWebApi.Services;
 
 namespace UniverseWebApi
 {
@@ -14,7 +15,7 @@ namespace UniverseWebApi
     /// </summary>
     internal sealed class UniverseWebApi : StatelessService
     {
-        public UniverseWebApi(StatelessServiceContext context)
+        public UniverseWebApi(StatelessServiceContext context, IUniverseManagementService managementService)
             : base(context)
         { }
 
