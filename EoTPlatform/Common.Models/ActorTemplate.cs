@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,18 +19,27 @@ namespace Common.Models
      * Have versions
      **/
 
+    [DataContract]
     public class ActorTemplate
     {
-        public ActorTemplate()
+        public ActorTemplate(string id)
         {
+            this.Id = id;
             Metadata = new Dictionary<string, string>();
-            Properties = new Dictionary<string, string>();
+            Properties = new Dictionary<string, ActorTemplateProperty>();
             Commands = new List<string>();
         }
 
-        public string Id { get; set; }
-        public Dictionary<string, string> Metadata { get; set; }
-        public Dictionary<string, string> Properties { get; set; }
-        public List<string> Commands { get; set; }
+        [DataMember]
+        public string Id { get; private set; }
+
+        [DataMember]
+        public IDictionary<string, string> Metadata { get; set; }
+
+        [DataMember]
+        public IDictionary<string, ActorTemplateProperty> Properties { get; set; }
+
+        [DataMember]
+        public IList<string> Commands { get; set; }
     }
 }

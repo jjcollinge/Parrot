@@ -15,5 +15,8 @@ namespace Common.Models
 
         [DataMember]
         public string UniverseTemplateFilePath { get; set; }
+
+        [DataMember]
+        public string UniverseDataSourceFilePath { get; set; }
     }
 }

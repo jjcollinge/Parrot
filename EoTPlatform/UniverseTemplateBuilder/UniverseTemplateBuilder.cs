@@ -44,8 +44,7 @@ namespace UniverseTemplateBuilder
 
             foreach (var actor in actors)
             {
-                var template = new ActorTemplate();
-                template.Id = actor.Key;
+                var template = new ActorTemplate(actor.Key);
                 template.Metadata.Add("value", actor.Value);
 
                 actorTemplates.Add(template);

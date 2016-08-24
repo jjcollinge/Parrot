@@ -17,8 +17,8 @@ namespace UniverseBuilder.Tests
             universeTemplate.Version = "0.1";
             universeTemplate.ActorTemplates = new List<ActorTemplate>
             {
-                new ActorTemplate { Id = "0", Metadata = new Dictionary<string, string>(), Properties = new Dictionary<string, string>(), Commands = new List<string>() },
-                new ActorTemplate { Id = "1", Metadata = new Dictionary<string, string>(), Properties = new Dictionary<string, string>(), Commands = new List<string>() },
+                new ActorTemplate("0"),
+                new ActorTemplate("1")
             };
 
             var platform = new MockPlatformAbstraction();

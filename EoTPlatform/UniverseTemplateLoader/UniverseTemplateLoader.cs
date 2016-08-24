@@ -9,6 +9,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Common.Interfaces;
 using Common.Models;
+using Common.Services;
 
 namespace UniverseTemplateLoader
 {
@@ -42,14 +43,42 @@ namespace UniverseTemplateLoader
 
         private async Task<UniverseTemplate> LoadJsonTemplateAsync(string templateFilePath)
         {
-            UniverseTemplate template = null;
+            var universeTemplate = new UniverseTemplate();
 
             try
             {
                 using (StreamReader reader = new StreamReader(templateFilePath))
                 {
                     string json = reader.ReadToEnd();
-                    template = await Task.Run(() => JsonConvert.DeserializeObject<UniverseTemplate>(json));
+
+                    //TODO: Sort deserialization out
+                    IDictionary<string, object> jsonDictionary = await Task.Run(() => JsonConvert.DeserializeObject<IDictionary<string, object>>(json, new JsonConverter[] { new UniverseTemplateConverter() }));
+                    foreach (var universeKey in jsonDictionary.Keys)
+                    {
+                        var value = jsonDictionary[universeKey];
+                        if (universeKey == "id")
+                        {
+                            universeTemplate.Id = value.ToString();
+                        }
+                        else if (universeKey == "version")
+                        {
+                            universeTemplate.Version = value.ToString();
+                        }
+                        else if (universeKey == "actorTemplates")
+                        {
+                            List<Dictionary<string, object>> actorTemplates = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(value.ToString());
+
+                            foreach (var actorTemplate in actorTemplates)
+                            {
+                                var id = (string)actorTemplate["id"];
+                                var actor = new ActorTemplate(id);
+                                actor.Metadata = JsonConvert.DeserializeObject<Dictionary<string, string>>(actorTemplate["metadata"].ToString());
+                                actor.Properties = JsonConvert.DeserializeObject<Dictionary<string, ActorTemplateProperty>>(actorTemplate["properties"].ToString());
+                                actor.Commands = JsonConvert.DeserializeObject<List<string>>(actorTemplate["commands"].ToString());
+                                universeTemplate.ActorTemplates.Add(actor);
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -57,8 +86,8 @@ namespace UniverseTemplateLoader
                 throw ex;
                 //TODO: Handle exceptions
             }
-            
-            return template;
+
+            return universeTemplate;
         }
 
         /// <summary>

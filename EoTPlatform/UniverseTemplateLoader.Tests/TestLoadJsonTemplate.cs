@@ -34,7 +34,7 @@ namespace UniverseTemplateLoader.Tests
         {
             UniverseTemplateLoader loader = new UniverseTemplateLoader(null);
             var template = await loader.LoadUniversalTemplateFromFileAsync(GetTemplatePath(testFileName));
-            Assert.IsTrue(template.ActorTemplates.Count == 2);
+            Assert.IsTrue(template.ActorTemplates.Count == 1);
         }
 
         [Ignore]

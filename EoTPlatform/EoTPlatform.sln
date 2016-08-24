@@ -51,6 +51,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniverseActorRegistry.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniverseFactory.Mocks", "MockUniverseFactory\UniverseFactory.Mocks.csproj", "{094BC701-5C55-45D6-A644-AB3EC8F701EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniverseScheduler", "UniverseScheduler\UniverseScheduler.csproj", "{FD65BC9C-2055-4ADD-A559-6AD42481555D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniverseFactory.Tests", "UniverseFactory.Tests\UniverseFactory.Tests.csproj", "{FE3FFAF7-1B7C-4DEC-9CE0-A03951758482}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -238,6 +242,20 @@ Global
 		{094BC701-5C55-45D6-A644-AB3EC8F701EE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{094BC701-5C55-45D6-A644-AB3EC8F701EE}.Release|x64.ActiveCfg = Release|Any CPU
 		{094BC701-5C55-45D6-A644-AB3EC8F701EE}.Release|x64.Build.0 = Release|Any CPU
+		{FD65BC9C-2055-4ADD-A559-6AD42481555D}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{FD65BC9C-2055-4ADD-A559-6AD42481555D}.Debug|x64.ActiveCfg = Debug|x64
+		{FD65BC9C-2055-4ADD-A559-6AD42481555D}.Debug|x64.Build.0 = Debug|x64
+		{FD65BC9C-2055-4ADD-A559-6AD42481555D}.Release|Any CPU.ActiveCfg = Release|x64
+		{FD65BC9C-2055-4ADD-A559-6AD42481555D}.Release|x64.ActiveCfg = Release|x64
+		{FD65BC9C-2055-4ADD-A559-6AD42481555D}.Release|x64.Build.0 = Release|x64
+		{FE3FFAF7-1B7C-4DEC-9CE0-A03951758482}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE3FFAF7-1B7C-4DEC-9CE0-A03951758482}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE3FFAF7-1B7C-4DEC-9CE0-A03951758482}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FE3FFAF7-1B7C-4DEC-9CE0-A03951758482}.Debug|x64.Build.0 = Debug|Any CPU
+		{FE3FFAF7-1B7C-4DEC-9CE0-A03951758482}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE3FFAF7-1B7C-4DEC-9CE0-A03951758482}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE3FFAF7-1B7C-4DEC-9CE0-A03951758482}.Release|x64.ActiveCfg = Release|Any CPU
+		{FE3FFAF7-1B7C-4DEC-9CE0-A03951758482}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

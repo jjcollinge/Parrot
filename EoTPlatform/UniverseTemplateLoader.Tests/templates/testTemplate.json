@@ -1,7 +1,7 @@
 {
     "id": "universe123124",
     "version": "0.1",
-    "actorTemplates":[
+    "actorTemplates": [
         {
             "id": "ABC123",
             "metadata": {

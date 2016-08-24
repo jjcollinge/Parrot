@@ -89,6 +89,10 @@
       <Project>{F85CFF0C-E291-4ABB-BB47-32CCB052AD0A}</Project>
       <Name>Common.Models</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common.Services\Common.Services.csproj">
+      <Project>{A04812E0-DEB6-489C-9879-886196F3F921}</Project>
+      <Name>Common.Services</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common\Common.Interfaces.csproj">
       <Project>{0CE24254-3FD9-40F7-BF15-F4B159E029C7}</Project>
       <Name>Common.Interfaces</Name>

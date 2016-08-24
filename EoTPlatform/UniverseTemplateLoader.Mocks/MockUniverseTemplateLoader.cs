@@ -15,7 +15,7 @@ namespace UniverseTemplateLoader.Mocks
             return Task.FromResult(new UniverseTemplate
             {
                 Id = "0",
-                ActorTemplates = new List<ActorTemplate> { new ActorTemplate {  Id = "0", Metadata = new Dictionary<string, string>(), Properties = new Dictionary<string, string>(), Commands = new List<string>() } }
+                ActorTemplates = new List<ActorTemplate> { new ActorTemplate("0") }
             });
         }
     }

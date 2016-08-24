@@ -10,6 +10,11 @@ namespace Common.Models
     [DataContract]
     public class UniverseTemplate
     {
+        public UniverseTemplate()
+        {
+            ActorTemplates = new List<ActorTemplate>();
+        }
+
         [DataMember]
         public string Id { get; set; }
         [DataMember]
