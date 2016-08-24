@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.ServiceFabric.Services.Remoting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,9 +7,11 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    public interface IUniverseScheduler
+    public interface IUniverseScheduler : IService
     {
-        Task StartAsync(string dataFilePath);
+        Task StartAsync(string dataFilePath, int delayInMs = 10000);
         Task StopAsync();
+        Task PauseAsync();
+        Task UnpauseAsync();
     }
 }

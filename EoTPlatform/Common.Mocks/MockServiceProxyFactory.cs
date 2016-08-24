@@ -6,6 +6,7 @@ using UniverseTemplateBuilder.Mocks;
 using UniverseTemplateLoader.Mocks;
 using UniverseActorRegistry.Mocks;
 using UniverseFactory.Mocks;
+using UniverseScheduler.Mocks;
 
 namespace Common.Mocks
 {
@@ -29,6 +30,11 @@ namespace Common.Mocks
         public IUniverseRegistry CreateUniverseRegistryServiceProxy(Uri serviceAddress)
         {
             return new MockUniverseRegistry();
+        }
+
+        public IUniverseScheduler CreateUniverseScheduler(Uri serviceAddress)
+        {
+            return new MockUniverseScheduler();
         }
 
         public IUniverseTemplateBuilder CreateUniverseTemplateBuilderServiceProxy(Uri serviceAddress)

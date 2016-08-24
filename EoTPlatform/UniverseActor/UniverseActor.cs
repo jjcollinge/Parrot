@@ -4,19 +4,19 @@ using Microsoft.ServiceFabric.Actors.Runtime;
 using UniverseActor.Interfaces;
 using Common.Models;
 using System.Text;
+using System.Collections.Generic;
 
 namespace UniverseActor
 {
     [StatePersistence(StatePersistence.Persisted)]
     public class UniverseActor : Actor, IUniverseActor, IRemindable
     {
-        // Communications
         private MessageSender sender;
         private MessageReceiver receiver;
         private HubManager hub;
+        private Commands commands;
 
         private static string deviceId;
-        private static bool isConnected = false;
 
         // Template
         private ActorTemplate template { get; set; }
@@ -25,29 +25,19 @@ namespace UniverseActor
         {
             sender = new MessageSender(deviceId, "HostName=eotiothub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
             receiver = new MessageReceiver(deviceId, "eotiothub.azure-devices.net", "iothubowner", "Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
-            hub = new HubManager("HostName=eotiothub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
         }
-        
+
         public async Task SendMessageAsync(string msg)
         {
-            if (isConnected)
-            {
-                await sender.SendMessageAsync(Encoding.UTF8.GetBytes(msg));
-            }
+            await sender.SendMessageAsync(Encoding.UTF8.GetBytes(msg));
         }
 
         public async Task ReceiveMessageAsync()
         {
-            if(isConnected)
-            {
-                var message = await receiver.ReceiveMessageAsync();
+            var message = await receiver.ReceiveMessageAsync();
 
-                // Assumes message is just command name
-                if(template.Commands.Contains(message))
-                {
-                    // Invoke method via reflection
-                }
-            }
+            // Assumes message is just command name
+            await commands.InvokeAsync(message);
         }
 
         public Task EnableAsync()
@@ -69,15 +59,15 @@ namespace UniverseActor
         {
 
         }
-    
+
         public async Task ReceiveReminderAsync(string reminderName, byte[] context, TimeSpan dueTime, TimeSpan period)
         {
-            
+
         }
 
         public Task<bool> IsConnectedAsync()
         {
-            return Task.FromResult(isConnected);
+            return Task.FromResult(deviceId != null ? true : false);
         }
 
         /// <summary>
@@ -86,13 +76,20 @@ namespace UniverseActor
         /// </summary>
         protected async override Task OnActivateAsync()
         {
-            deviceId = this.Id.GetStringId();
-            await hub.RegisterAsync(deviceId);
+            if (deviceId == null)
+            {
+                hub = new HubManager("HostName=eotiothub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
+                deviceId = this.Id.GetStringId();
+                commands = new Commands(this.template.Commands);
+            }
+
+            await hub?.RegisterAsync(deviceId);
         }
 
         protected async override Task OnDeactivateAsync()
         {
-            await hub.DeregisterAsync();
+            await hub?.DeregisterAsync();
+            hub = null;
         }
 
         public Task SetTemplate(ActorTemplate template)

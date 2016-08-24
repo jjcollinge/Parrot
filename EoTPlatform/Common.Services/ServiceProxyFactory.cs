@@ -7,6 +7,9 @@ namespace Common.Services
 {
     public class ServiceProxyFactory : Interfaces.IServiceProxyFactory
     {
+        /**
+         * This class prevents clients having to import references to the interfaces directly
+         **/
         public IUniverseActorRegistry CreateUniverseActorRegistryServiceProxy(Uri serviceAddress)
         {
             // No partition key needed as currently uses singleton partition scheme
@@ -27,6 +30,11 @@ namespace Common.Services
         {
             // Uses int64 partition scheme so requires key
             return ServiceProxy.Create<IUniverseRegistry>(serviceAddress, new ServicePartitionKey(1L));
+        }
+
+        public IUniverseScheduler CreateUniverseScheduler(Uri serviceAddress)
+        {
+            return ServiceProxy.Create<IUniverseScheduler>(serviceAddress);
         }
 
         public IUniverseTemplateBuilder CreateUniverseTemplateBuilderServiceProxy(Uri serviceAddress)

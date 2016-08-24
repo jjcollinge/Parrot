@@ -32,13 +32,13 @@ namespace UniverseBuilder
             this.proxyFactory = proxyFactory;
         }
 
-        public async Task<UniverseDescriptor> BuildUniverseAsync(UniverseTemplate template)
+        public async Task<UniverseDescriptor> BuildUniverseAsync(string dataSourceFilePath, UniverseTemplate template)
         {
             if (template == null)
                 return null;
 
             // Create the services needed for a universes
-            var universeServicesEndpoints = await CreateUniverseServicesAsync(template.ActorTemplates);
+            var universeServicesEndpoints = await CreateUniverseServicesAsync(dataSourceFilePath, template.ActorTemplates);
             // Create the universe actors
             await CreateUniverseActorsAsync(template.ActorTemplates);
             // Rather than pass back all the actor ids here, pass back a reference to a stateful service endpoint which has been preloaded with them.
@@ -49,26 +49,42 @@ namespace UniverseBuilder
             return universeDescriptor;
         }
 
-        private async Task CreateUniverseActorsAsync(List<ActorTemplate> actorTemplates)
+        private Task CreateUniverseActorsAsync(List<ActorTemplate> actorTemplates)
         {
-            foreach(var actorTemplate in actorTemplates)
-            {
-                var actorId = actorTemplate.Id;
-                // This will cause n actors to register with IoTHub
-                var actor = ActorProxy.Create<IUniverseActor>(new ActorId(actorId));
+            Parallel.ForEach<ActorTemplate>(actorTemplates, async (actorTemplate) => {
+                var actor = ActorProxy.Create<IUniverseActor>(new ActorId(actorTemplate.Id));
                 //TODO: Change to DI
                 await actor.SetTemplate(actorTemplate);
-            }
+            });
+            return Task.FromResult(true);
         }
 
-        private async Task<Dictionary<string, List<string>>> CreateUniverseServicesAsync(List<ActorTemplate> actorTemplates)
+        private async Task<Dictionary<string, List<string>>> CreateUniverseServicesAsync(string dataSourceFilePath, List<ActorTemplate> actorTemplates)
         {
-            var universeActorRegistryKVP = await CreateUniverseActorRegistryAsync(actorTemplates);
+            var universeActorRegistryNameWithAddresses = await CreateUniverseActorRegistryAsync(actorTemplates);
+            var universeSchedulerNameWithAddresses = await CreateUniverseSchedulerAsync(dataSourceFilePath);
 
             return new Dictionary<string, List<string>>
             {
-                {universeActorRegistryKVP.Key, universeActorRegistryKVP.Value}
+                {universeActorRegistryNameWithAddresses.Key, universeActorRegistryNameWithAddresses.Value},
+                {universeSchedulerNameWithAddresses.Key, universeSchedulerNameWithAddresses.Value }
             };
+        }
+
+        private async Task<KeyValuePair<string, List<string>>> CreateUniverseSchedulerAsync(string dataSourceFilePath)
+        {
+            var appName = await platform.GetServiceContextApplicationNameAsync();
+            var randomPrefix = new Random().Next(0, 99999).ToString();
+            var serviceAddress = $"{appName}/UniverseScheduler{randomPrefix}";
+            var serviceName = new Uri(serviceAddress);
+            var serviceTypeName = "UniverseSchedulerType";
+
+            await platform.BuildServiceAsync(appName, serviceName, serviceTypeName, ServiceContextTypes.Stateless);
+
+            var universeScheduler = proxyFactory.CreateUniverseScheduler(serviceName);
+            await universeScheduler.StartAsync(dataSourceFilePath);
+
+            return new KeyValuePair<string, List<string>>(serviceTypeName, new List<string> { serviceAddress });
         }
 
         private async Task<KeyValuePair<string, List<string>>> CreateUniverseActorRegistryAsync(List<ActorTemplate> actorTemplates)

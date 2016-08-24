@@ -13,15 +13,16 @@ using Common.Services;
 
 namespace UniverseTemplateLoader
 {
-    /// <summary>
-    /// An instance of this class is created for each service instance by the Service Fabric runtime.
-    /// </summary>
     public sealed class UniverseTemplateLoader : StatelessService, IUniverseTemplateLoader
     {
         public UniverseTemplateLoader(StatelessServiceContext context)
             : base(context)
         { }
 
+        /**
+         * Matches the relevant loading method with the template file extension.
+         * .i.e. a .json file is handed to a json file loading method
+         **/
         public async Task<UniverseTemplate> LoadUniversalTemplateFromFileAsync(string templateFilePath)
         {
             //TODO: Add further validation to filepath
@@ -41,6 +42,9 @@ namespace UniverseTemplateLoader
             return template;
         }
 
+        /**
+         * Loads a JSON template file into memory
+         **/
         private async Task<UniverseTemplate> LoadJsonTemplateAsync(string templateFilePath)
         {
             var universeTemplate = new UniverseTemplate();

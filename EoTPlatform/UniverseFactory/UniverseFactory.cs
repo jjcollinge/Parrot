@@ -13,9 +13,6 @@ using Common.Interfaces;
 
 namespace UniverseFactory
 {
-    /// <summary>
-    /// An instance of this class is created for each service instance by the Service Fabric runtime.
-    /// </summary>
     public sealed class UniverseFactory : StatelessService, IUniverseFactory
     {
         //TODO: Consider packaging into NuGet
@@ -41,7 +38,7 @@ namespace UniverseFactory
             // Build universe
             var universeBuilderAddress = new Uri("fabric:/EoTPlatform/UniverseBuilder");
             var universeBuilder = serviceFactory.CreateUniverseBuilderServiceProxy(universeBuilderAddress);
-            var universeDescriptor = await universeBuilder.BuildUniverseAsync(universeTemplate);
+            var universeDescriptor = await universeBuilder.BuildUniverseAsync(specification.UniverseDataSourceFilePath, universeTemplate);
 
             // Register the universe
             var universeRegistryAddress = new Uri("fabric:/EoTPlatform/UniverseRegistry");
@@ -52,10 +49,6 @@ namespace UniverseFactory
             return universeDescriptor;
         }
 
-        /// <summary>
-        /// Optional override to create listeners (e.g., TCP, HTTP) for this service replica to handle client or user requests.
-        /// </summary>
-        /// <returns>A collection of listeners.</returns>
         protected override IEnumerable<ServiceInstanceListener> CreateServiceInstanceListeners()
         {
             return new[]

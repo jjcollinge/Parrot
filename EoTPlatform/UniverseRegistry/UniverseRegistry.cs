@@ -12,9 +12,6 @@ using Common.Interfaces;
 
 namespace UniverseRegistry
 {
-    /// <summary>
-    /// An instance of this class is created for each service replica by the Service Fabric runtime.
-    /// </summary>
     public sealed class UniverseRegistry : StatefulService, IUniverseRegistry
     {
         //TODO: Change read/write behaviour to exception proof
@@ -23,6 +20,9 @@ namespace UniverseRegistry
             : base(context)
         { }
 
+        /**
+         * Iterates through each stored universe and compiles a dictionary of ids with descriptors
+         **/
         public async Task<Dictionary<string, UniverseDescriptor>> GetUniversesAsync()
         {
             var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDescriptor>>("universes");
@@ -44,6 +44,9 @@ namespace UniverseRegistry
             return universesDictionary;
         }
 
+        /**
+         * Registers a new universe descriptor in the universe registry
+         **/
         public async Task RegisterUniverseAsync(UniverseDescriptor universe)
         {
             var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDescriptor>>("universes");
@@ -59,6 +62,9 @@ namespace UniverseRegistry
             }
         }
 
+        /**
+         * Deregisters a universe from the universe registry
+         **/
         public async Task DeregisterUniverseAsync(string id)
         {
             var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDescriptor>>("universes");
@@ -70,6 +76,9 @@ namespace UniverseRegistry
             }
         }
 
+        /**
+         * Grabs a specific universe descriptor from the universe registry provided it exists
+         **/
         public async Task<UniverseDescriptor> GetUniverseAsync(string universeId)
         {
             var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDescriptor>>("universes");
@@ -84,13 +93,6 @@ namespace UniverseRegistry
             return descriptor;
         }
 
-        /// <summary>
-        /// Optional override to create listeners (e.g., HTTP, Service Remoting, WCF, etc.) for this service replica to handle client or user requests.
-        /// </summary>
-        /// <remarks>
-        /// For more information on service communication, see http://aka.ms/servicefabricservicecommunication
-        /// </remarks>
-        /// <returns>A collection of listeners.</returns>
         protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
         {
             return new[]

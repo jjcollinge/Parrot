@@ -6,6 +6,9 @@ namespace Common.Interfaces
 {
     public interface IUniverseBuilder : IService
     {
-        Task<UniverseDescriptor> BuildUniverseAsync(UniverseTemplate template);
+        /**
+         * Given a data file and a template this method will build the necessary infrastruture for a universe
+         **/
+        Task<UniverseDescriptor> BuildUniverseAsync(string dataSourceFilePath, UniverseTemplate template);
     }
 }
