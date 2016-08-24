@@ -82,7 +82,7 @@ namespace UniverseBuilder
             await platform.BuildServiceAsync(appName, serviceName, serviceTypeName, ServiceContextTypes.Stateless);
 
             var universeScheduler = proxyFactory.CreateUniverseScheduler(serviceName);
-            await universeScheduler.StartAsync(dataSourceFilePath);
+            await universeScheduler.StartAsync(dataSourceFilePath, 1000);
 
             return new KeyValuePair<string, List<string>>(serviceTypeName, new List<string> { serviceAddress });
         }

@@ -84,6 +84,10 @@
       <Project>{5A7C316C-602B-44B6-B684-175D9845AE60}</Project>
       <Name>UniverseRegistry.Mocks</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UniverseScheduler.Mocks\UniverseScheduler.Mocks.csproj">
+      <Project>{C8613970-D924-463C-902A-5206CB84B533}</Project>
+      <Name>UniverseScheduler.Mocks</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UniverseTemplateBuilder.Mocks\UniverseTemplateBuilder.Mocks.csproj">
       <Project>{DF5EAA0B-5214-43BE-96C4-AAEA031B5B62}</Project>
       <Name>UniverseTemplateBuilder.Mocks</Name>

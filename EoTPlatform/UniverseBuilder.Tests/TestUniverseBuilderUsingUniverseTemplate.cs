@@ -24,7 +24,7 @@ namespace UniverseBuilder.Tests
             var platform = new MockPlatformAbstraction();
             var factory = new MockServiceProxyFactory();
             var universeBuilder = new UniverseBuilder(null, platform, factory);
-            var universeDescriptor = await universeBuilder.BuildUniverseAsync(universeTemplate);
+            var universeDescriptor = await universeBuilder.BuildUniverseAsync("datasourcepath", universeTemplate);
             Assert.IsNotNull(universeDescriptor);
             Assert.IsNotNull(universeDescriptor.ServiceEndpoints);
             Assert.IsTrue(universeDescriptor.ServiceEndpoints.Count == 1);

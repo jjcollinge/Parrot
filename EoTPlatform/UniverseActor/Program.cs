@@ -4,6 +4,7 @@ using System.Fabric;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors.Runtime;
+using Microsoft.ServiceFabric.Actors;
 
 namespace UniverseActor
 {
@@ -22,7 +23,7 @@ namespace UniverseActor
                 // For more information, see http://aka.ms/servicefabricactorsplatform
 
                 ActorRuntime.RegisterActorAsync<UniverseActor>(
-                   (context, actorType) => new ActorService(context, actorType, () => new UniverseActor())).GetAwaiter().GetResult();
+                   (context, actorType) => new ActorService(context, actorType, () => new UniverseActor(ActorId.CreateRandom().GetStringId()))).GetAwaiter().GetResult();
 
                 Thread.Sleep(Timeout.Infinite);
             }

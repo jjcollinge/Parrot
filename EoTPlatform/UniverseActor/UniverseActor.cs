@@ -9,20 +9,22 @@ using System.Collections.Generic;
 namespace UniverseActor
 {
     [StatePersistence(StatePersistence.Persisted)]
-    public class UniverseActor : Actor, IUniverseActor, IRemindable
+    public class UniverseActor : Actor, IUniverseActor
     {
         private MessageSender sender;
         private MessageReceiver receiver;
         private HubManager hub;
-        private Commands commands;
+        private CommandService commands;
+        private IActorTimer pushTimer;
 
-        private static string deviceId;
+        public string deviceId { get; set; }
 
         // Template
-        private ActorTemplate template { get; set; }
+        public ActorTemplate template { get; private set; }
 
-        public UniverseActor()
+        public UniverseActor(string id)
         {
+            deviceId = id;
             sender = new MessageSender(deviceId, "HostName=eotiothub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
             receiver = new MessageReceiver(deviceId, "eotiothub.azure-devices.net", "iothubowner", "Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
         }
@@ -55,19 +57,9 @@ namespace UniverseActor
             throw new NotImplementedException();
         }
 
-        private async Task RegisterReminder()
+        private async Task PushStatusAsync(object state)
         {
-
-        }
-
-        public async Task ReceiveReminderAsync(string reminderName, byte[] context, TimeSpan dueTime, TimeSpan period)
-        {
-
-        }
-
-        public Task<bool> IsConnectedAsync()
-        {
-            return Task.FromResult(deviceId != null ? true : false);
+            await sender.SendMessageAsync(Encoding.UTF8.GetBytes("status:good"));
         }
 
         /// <summary>
@@ -80,7 +72,12 @@ namespace UniverseActor
             {
                 hub = new HubManager("HostName=eotiothub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
                 deviceId = this.Id.GetStringId();
-                commands = new Commands(this.template.Commands);
+                commands = new CommandService(new List<string>(this.template.Commands));
+                pushTimer = this.RegisterTimer(
+                    this.PushStatusAsync,
+                    null,
+                    TimeSpan.FromMilliseconds(5000),
+                    TimeSpan.FromMilliseconds(1000));
             }
 
             await hub?.RegisterAsync(deviceId);

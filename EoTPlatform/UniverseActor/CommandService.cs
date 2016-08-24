@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace UniverseActor
 {
-    public class Commands
+    public class CommandService
     {
         List<string> commands;
 
-        public Commands(List<string> commands)
+        public CommandService(List<string> commands)
         {
             this.commands = commands;
         }

@@ -9,7 +9,7 @@ namespace Common
 {
     public interface IUniverseScheduler : IService
     {
-        Task StartAsync(string dataFilePath, int delayInMs = 10000);
+        Task StartAsync(string dataFilePath, int delayInMs);
         Task StopAsync();
         Task PauseAsync();
         Task UnpauseAsync();

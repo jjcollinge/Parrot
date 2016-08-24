@@ -173,6 +173,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandService.cs" />
     <Compile Include="HubManager.cs" />
     <Compile Include="MessageSender.cs" />
     <Compile Include="MessageReceiver.cs" />

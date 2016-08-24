@@ -85,8 +85,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="TestCallingDynamicallyGeneratedCustomerMethods.cs" />
-    <Compile Include="TestConnectingToIoTHub.cs" />
+    <Compile Include="TestActorIoTHubCommunication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

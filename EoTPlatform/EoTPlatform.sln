@@ -65,6 +65,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestIoTHubClient.cs", "Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniverseScheduler.Tests", "UniverseScheduler.Tests\UniverseScheduler.Tests.csproj", "{CFF30C4F-C906-421B-A79E-C8A5D85DFF83}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniverseScheduler.Mocks", "UniverseScheduler.Mocks\UniverseScheduler.Mocks.csproj", "{C8613970-D924-463C-902A-5206CB84B533}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -302,6 +304,14 @@ Global
 		{CFF30C4F-C906-421B-A79E-C8A5D85DFF83}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CFF30C4F-C906-421B-A79E-C8A5D85DFF83}.Release|x64.ActiveCfg = Release|Any CPU
 		{CFF30C4F-C906-421B-A79E-C8A5D85DFF83}.Release|x64.Build.0 = Release|Any CPU
+		{C8613970-D924-463C-902A-5206CB84B533}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8613970-D924-463C-902A-5206CB84B533}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8613970-D924-463C-902A-5206CB84B533}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C8613970-D924-463C-902A-5206CB84B533}.Debug|x64.Build.0 = Debug|Any CPU
+		{C8613970-D924-463C-902A-5206CB84B533}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8613970-D924-463C-902A-5206CB84B533}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8613970-D924-463C-902A-5206CB84B533}.Release|x64.ActiveCfg = Release|Any CPU
+		{C8613970-D924-463C-902A-5206CB84B533}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

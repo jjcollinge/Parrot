@@ -14,7 +14,7 @@ namespace UniverseScheduler.Mocks
             return Task.FromResult(true);
         }
 
-        public Task StartAsync(string dataFilePath, int delayInMs = 10000)
+        public Task StartAsync(string dataFilePath, int delayInMs)
         {
             return Task.FromResult(true);
         }

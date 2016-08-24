@@ -32,7 +32,7 @@ namespace UniverseScheduler
             throw new NotImplementedException();
         }
 
-        public Task StartAsync(string dataFilePath)
+        public Task StartAsync(string dataFilePath, int delayInMs)
         { 
             throw new NotImplementedException();
         }

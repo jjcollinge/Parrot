@@ -7,35 +7,29 @@ using System.Reflection;
 namespace UniverseActor.Tests
 {
     [TestClass]
-    public class TestConnectingToIoTHub
+    public class TestActorIoTHubCommunication
     {
         /**
          * TODO: Requires further abstractions to mock components
          **/
 
         [TestMethod]
-        public async Task TestSuccesfulIoTHubConnection()
+        public async Task TestSuccessfulIoTHubRegistration()
         {
-            var actor = new UniverseActor();
+            var actor = new UniverseActor("test");
             var method = typeof(ActorBase).GetMethod("OnActivateAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             await (Task)method.Invoke(actor, null);
-            var connected = await actor.IsConnectedAsync();
-            Assert.IsTrue(connected);
         }
 
         [TestMethod]
-        public async Task TestSuccesfulIoTHubConnectionAndDeviceRemoval()
+        public async Task TestSuccessfulIoTHubConnectionAndDeviceRemoval()
         {
-            var actor = new UniverseActor();
+            var actor = new UniverseActor("test");
             var method1 = typeof(ActorBase).GetMethod("OnActivateAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             await (Task)method1.Invoke(actor, null);
-            var connected = await actor.IsConnectedAsync();
-            Assert.IsTrue(connected);
 
             var method2 = typeof(ActorBase).GetMethod("OnDeactivateAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             await (Task)method2.Invoke(actor, null);
-            connected = await actor.IsConnectedAsync();
-            Assert.IsFalse(connected);
         }
 
         //[TestMethod]
@@ -51,7 +45,7 @@ namespace UniverseActor.Tests
         [TestMethod]
         public async Task TestIoTHubMessageSend()
         {
-            var actor = new UniverseActor();
+            var actor = new UniverseActor("test");
             var method1 = typeof(ActorBase).GetMethod("OnActivateAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             await (Task)method1.Invoke(actor, null);
             await actor.SendMessageAsync("Hello World");
