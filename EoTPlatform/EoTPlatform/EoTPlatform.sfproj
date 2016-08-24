@@ -28,6 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UniverseActorRegistry\UniverseActorRegistry.csproj" />
+    <ProjectReference Include="..\UniverseActor\UniverseActor.csproj" />
     <ProjectReference Include="..\UniverseBuilder\UniverseBuilder.csproj" />
     <ProjectReference Include="..\UniverseFactory\UniverseFactory.csproj" />
     <ProjectReference Include="..\UniverseRegistry\UniverseRegistry.csproj" />
