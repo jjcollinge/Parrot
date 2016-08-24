@@ -1,36 +1,53 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Runtime;
-using Microsoft.ServiceFabric.Actors.Client;
 using UniverseActor.Interfaces;
-using Microsoft.Azure.Devices;
-using Microsoft.Azure.Devices.Common.Exceptions;
+using Common.Models;
+using System.Text;
 
 namespace UniverseActor
 {
     [StatePersistence(StatePersistence.Persisted)]
-    public class UniverseActor : Actor, IUniverseActor
+    public class UniverseActor : Actor, IUniverseActor, IRemindable
     {
-        private const string iotConnectionString = "HostName=eotiothub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=";
-        private static RegistryManager registryManager;
-        private static Device device;
-        private static string deviceId = Guid.NewGuid().ToString();
+        // Communications
+        private MessageSender sender;
+        private MessageReceiver receiver;
+        private HubManager hub;
+
+        private static string deviceId;
+        private static bool isConnected = false;
+
+        // Template
+        private ActorTemplate template { get; set; }
 
         public UniverseActor()
-        { }
-
-        public Task DisableAsync()
         {
-            throw new NotImplementedException();
+            sender = new MessageSender(deviceId, "HostName=eotiothub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
+            receiver = new MessageReceiver(deviceId, "eotiothub.azure-devices.net", "iothubowner", "Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
+            hub = new HubManager("HostName=eotiothub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
+        }
+        
+        public async Task SendMessageAsync(string msg)
+        {
+            if (isConnected)
+            {
+                await sender.SendMessageAsync(Encoding.UTF8.GetBytes(msg));
+            }
         }
 
-        public Task DispatchMessageAsync()
+        public async Task ReceiveMessageAsync()
         {
-            throw new NotImplementedException();
+            if(isConnected)
+            {
+                var message = await receiver.ReceiveMessageAsync();
+
+                // Assumes message is just command name
+                if(template.Commands.Contains(message))
+                {
+                    // Invoke method via reflection
+                }
+            }
         }
 
         public Task EnableAsync()
@@ -38,7 +55,7 @@ namespace UniverseActor
             throw new NotImplementedException();
         }
 
-        public Task ReceivedMessageAsync()
+        public Task DisableAsync()
         {
             throw new NotImplementedException();
         }
@@ -48,10 +65,19 @@ namespace UniverseActor
             throw new NotImplementedException();
         }
 
+        private async Task RegisterReminder()
+        {
+
+        }
+    
+        public async Task ReceiveReminderAsync(string reminderName, byte[] context, TimeSpan dueTime, TimeSpan period)
+        {
+            
+        }
+
         public Task<bool> IsConnectedAsync()
         {
-            var connected = device != null ? true : false;
-            return Task.FromResult(connected);
+            return Task.FromResult(isConnected);
         }
 
         /// <summary>
@@ -60,31 +86,19 @@ namespace UniverseActor
         /// </summary>
         protected async override Task OnActivateAsync()
         {
-            if(device == null)
-            {
-                await RegisterDeviceWithIoTHubAsync();
-            }
+            deviceId = this.Id.GetStringId();
+            await hub.RegisterAsync(deviceId);
         }
 
-        private async Task RegisterDeviceWithIoTHubAsync()
+        protected async override Task OnDeactivateAsync()
         {
-            registryManager = RegistryManager.CreateFromConnectionString(iotConnectionString);
+            await hub.DeregisterAsync();
+        }
 
-            try
-            {
-                device = await registryManager.AddDeviceAsync(new Device(deviceId));
-            }
-            catch (DeviceAlreadyExistsException)
-            {
-                device = await registryManager.GetDeviceAsync(deviceId);
-            }
-            catch(Exception ex)
-            {
-                //TODO: Handle exception
-                throw ex;
-            }
-
-            ActorEventSource.Current.Message("Generated device key: {0}", device.Authentication.SymmetricKey.PrimaryKey);
+        public Task SetTemplate(ActorTemplate template)
+        {
+            this.template = template;
+            return Task.FromResult(true);
         }
     }
 }

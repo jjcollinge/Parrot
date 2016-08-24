@@ -11,6 +11,9 @@ using Microsoft.ServiceFabric.Services.Communication.Client;
 using Microsoft.ServiceFabric.Services.Client;
 using Common.Services;
 using System.Threading;
+using Microsoft.ServiceFabric.Actors.Client;
+using UniverseActor.Interfaces;
+using Microsoft.ServiceFabric.Actors;
 
 namespace UniverseBuilder
 {
@@ -34,12 +37,28 @@ namespace UniverseBuilder
             if (template == null)
                 return null;
 
+            // Create the services needed for a universes
             var universeServicesEndpoints = await CreateUniverseServicesAsync(template.ActorTemplates);
-
+            // Create the universe actors
+            await CreateUniverseActorsAsync(template.ActorTemplates);
             // Rather than pass back all the actor ids here, pass back a reference to a stateful service endpoint which has been preloaded with them.
             var universeDescriptor = new UniverseDescriptor(universeServicesEndpoints);
 
+            // Also needs to compile custom plugin assembly files
+
             return universeDescriptor;
+        }
+
+        private async Task CreateUniverseActorsAsync(List<ActorTemplate> actorTemplates)
+        {
+            foreach(var actorTemplate in actorTemplates)
+            {
+                var actorId = actorTemplate.Id;
+                // This will cause n actors to register with IoTHub
+                var actor = ActorProxy.Create<IUniverseActor>(new ActorId(actorId));
+                //TODO: Change to DI
+                await actor.SetTemplate(actorTemplate);
+            }
         }
 
         private async Task<Dictionary<string, List<string>>> CreateUniverseServicesAsync(List<ActorTemplate> actorTemplates)

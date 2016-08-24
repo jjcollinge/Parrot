@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors;
+using Common.Models;
 
 namespace UniverseActor.Interfaces
 {
@@ -16,7 +17,9 @@ namespace UniverseActor.Interfaces
         Task RestartAsync();
         Task DisableAsync();
         Task EnableAsync();
-        Task ReceivedMessageAsync();
-        Task DispatchMessageAsync();
+        Task ReceiveMessageAsync();
+        Task SendMessageAsync(string msg);
+        //TODO: Needs DI
+        Task SetTemplate(ActorTemplate template);
     }
 }
