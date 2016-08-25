@@ -32,47 +32,45 @@ namespace UniverseBuilder
             this.proxyFactory = proxyFactory;
         }
 
-        public async Task<UniverseDescriptor> BuildUniverseAsync(string dataSourceFilePath, UniverseTemplate template)
+        public async Task<UniverseDefinition> BuildUniverseAsync(string dataSourceFilePath, UniverseTemplate template)
         {
             if (template == null)
                 return null;
 
-            // Create the services needed for a universes
-            var universeServicesEndpoints = await CreateUniverseServicesAsync(dataSourceFilePath, template.ActorTemplates);
+            // Create empty universe definition
+            var universeDefinition = new UniverseDefinition();
+
             // Create the universe actors
-            await CreateUniverseActorsAsync(template.ActorTemplates);
-            // Rather than pass back all the actor ids here, pass back a reference to a stateful service endpoint which has been preloaded with them.
-            var universeDescriptor = new UniverseDescriptor(universeServicesEndpoints);
+            var actorIds = await CreateUniverseActorsAsync(template.ActorTemplates);
 
-            // Also needs to compile custom plugin assembly files
+            // Create the services needed for the universe
+            await CreateUniverseActorRegistryAsync(actorIds, universeDefinition);
+            await CreateUniverseSchedulerAsync(dataSourceFilePath, universeDefinition);
 
-            return universeDescriptor;
+            //TODO: Compile custom plugin assembly files
+
+            // Return description of all the universe services and metadata 
+            return universeDefinition;
         }
 
-        private Task CreateUniverseActorsAsync(List<ActorTemplate> actorTemplates)
+        private async Task<IDictionary<string, ActorId>> CreateUniverseActorsAsync(List<ActorTemplate> actorTemplates)
         {
+            var actorIds = new Dictionary<string, ActorId>();
+
+            // Create and initialise an actor for each actor defined in the template
             Parallel.ForEach<ActorTemplate>(actorTemplates, async (actorTemplate) => {
-                var actor = ActorProxy.Create<IUniverseActor>(new ActorId(actorTemplate.Id));
-                //TODO: Change to DI
-                await actor.SetTemplate(actorTemplate);
+                var actorId = new ActorId(actorTemplate.Id);
+                var actor = ActorProxy.Create<IUniverseActor>(actorId);
+                await actor.Initialise(actorTemplate);
+                actorIds.Add(actorTemplate.Id, actorId);
             });
-            return Task.FromResult(true);
+
+            return actorIds;
         }
 
-        private async Task<Dictionary<string, List<string>>> CreateUniverseServicesAsync(string dataSourceFilePath, List<ActorTemplate> actorTemplates)
+        private async Task CreateUniverseSchedulerAsync(string dataSourceFilePath, UniverseDefinition universeDefinition)
         {
-            var universeActorRegistryNameWithAddresses = await CreateUniverseActorRegistryAsync(actorTemplates);
-            var universeSchedulerNameWithAddresses = await CreateUniverseSchedulerAsync(dataSourceFilePath);
-
-            return new Dictionary<string, List<string>>
-            {
-                {universeActorRegistryNameWithAddresses.Key, universeActorRegistryNameWithAddresses.Value},
-                {universeSchedulerNameWithAddresses.Key, universeSchedulerNameWithAddresses.Value }
-            };
-        }
-
-        private async Task<KeyValuePair<string, List<string>>> CreateUniverseSchedulerAsync(string dataSourceFilePath)
-        {
+            // Create a new scheduler service
             var appName = await platform.GetServiceContextApplicationNameAsync();
             var randomPrefix = new Random().Next(0, 99999).ToString();
             var serviceAddress = $"{appName}/UniverseScheduler{randomPrefix}";
@@ -81,33 +79,31 @@ namespace UniverseBuilder
 
             await platform.BuildServiceAsync(appName, serviceName, serviceTypeName, ServiceContextTypes.Stateless);
 
+            // Start the event stream
             var universeScheduler = proxyFactory.CreateUniverseScheduler(serviceName);
-            await universeScheduler.StartAsync(dataSourceFilePath, 1000);
+            await universeScheduler.StartAsync(dataSourceFilePath, universeDefinition);
 
-            return new KeyValuePair<string, List<string>>(serviceTypeName, new List<string> { serviceAddress });
+            universeDefinition.AddServiceEndpoints(serviceTypeName, new List<string> { serviceAddress });
         }
 
-        private async Task<KeyValuePair<string, List<string>>> CreateUniverseActorRegistryAsync(List<ActorTemplate> actorTemplates)
+        private async Task CreateUniverseActorRegistryAsync(IDictionary<string, ActorId> actorIds, UniverseDefinition universeDefinition)
         {
+            // Create a new registry service
             var appName = await platform.GetServiceContextApplicationNameAsync();
             var randomPrefix = new Random().Next(0, 99999).ToString();
             var serviceAddress = $"{appName}/UniverseActorRegistry{randomPrefix}";
             var serviceName = new Uri(serviceAddress);
             var serviceTypeName = "UniverseActorRegistryType";
 
-            //TODO: Figure out how we should deal with port contention if running 'n' universes
             await platform.BuildServiceAsync(appName, serviceName, serviceTypeName, ServiceContextTypes.Stateful);
 
+            // Store each actor in the universes id in the registry
             var universeActorRegistry = proxyFactory.CreateUniverseActorRegistryServiceProxy(serviceName);
-            await universeActorRegistry.RegisterUniverseActorListAsync(actorTemplates);
+            await universeActorRegistry.RegisterUniverseActorsAsync(actorIds);
 
-            return new KeyValuePair<string, List<string>>(serviceTypeName, new List<string> { serviceAddress });
+            universeDefinition.AddServiceEndpoints(serviceTypeName, new List<string> { serviceAddress });
         }
 
-        /// <summary>
-        /// Optional override to create listeners (e.g., TCP, HTTP) for this service replica to handle client or user requests.
-        /// </summary>
-        /// <returns>A collection of listeners.</returns>
         protected override IEnumerable<ServiceInstanceListener> CreateServiceInstanceListeners()
         {
             return new[]

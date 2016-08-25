@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using System.Reflection;
+using Microsoft.ServiceFabric.Actors;
 
 namespace UniverseActor.Tests
 {
@@ -16,7 +17,7 @@ namespace UniverseActor.Tests
         [TestMethod]
         public async Task TestSuccessfulIoTHubRegistration()
         {
-            var actor = new UniverseActor("test");
+            var actor = new UniverseActor(new ActorId("test"));
             var method = typeof(ActorBase).GetMethod("OnActivateAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             await (Task)method.Invoke(actor, null);
         }
@@ -24,7 +25,7 @@ namespace UniverseActor.Tests
         [TestMethod]
         public async Task TestSuccessfulIoTHubConnectionAndDeviceRemoval()
         {
-            var actor = new UniverseActor("test");
+            var actor = new UniverseActor(new ActorId("test"));
             var method1 = typeof(ActorBase).GetMethod("OnActivateAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             await (Task)method1.Invoke(actor, null);
 
@@ -45,7 +46,7 @@ namespace UniverseActor.Tests
         [TestMethod]
         public async Task TestIoTHubMessageSend()
         {
-            var actor = new UniverseActor("test");
+            var actor = new UniverseActor(new ActorId("test"));
             var method1 = typeof(ActorBase).GetMethod("OnActivateAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             await (Task)method1.Invoke(actor, null);
             await actor.SendMessageAsync("Hello World");

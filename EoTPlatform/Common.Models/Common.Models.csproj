@@ -58,10 +58,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataStreamEvent.cs" />
     <Compile Include="ActorRelationship.cs" />
     <Compile Include="ActorTemplate.cs" />
     <Compile Include="ActorTemplateProperty.cs" />
-    <Compile Include="UniverseDescriptor.cs" />
+    <Compile Include="UniverseDefinition.cs" />
     <Compile Include="UniverseSpecification.cs" />
     <Compile Include="UniverseTemplate.cs" />
   </ItemGroup>

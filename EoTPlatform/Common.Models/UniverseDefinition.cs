@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 namespace Common.Models
 {
     [DataContract]
-    public class UniverseDescriptor
+    public class UniverseDefinition
     {
-        public UniverseDescriptor(Dictionary<string, List<string>> serviceEndpoints)
+        public UniverseDefinition()
         {
-            this.ServiceEndpoints = serviceEndpoints;
+            this.ServiceEndpoints = new Dictionary<string, List<string>>();
             this.Id = Guid.NewGuid().ToString();
         }
 
@@ -21,5 +21,10 @@ namespace Common.Models
 
         [DataMember]
         public Dictionary<string, List<string>> ServiceEndpoints { get; private set; }
+
+        public void AddServiceEndpoints(string serviceName, List<string> serviceEndpoints)
+        {
+            this.ServiceEndpoints.Add(serviceName, serviceEndpoints);
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace UniverseWebApi.Controllers
     public class UniverseController : ApiController
     {
         // GET api/universe 
-        public async Task<Dictionary<string, UniverseDescriptor>> GetAsync()
+        public async Task<Dictionary<string, UniverseDefinition>> GetAsync()
         {
             // Return a list of all the universe 
             var universeManagementService = new UniverseManagementService(new ServiceProxyFactory());
@@ -20,7 +20,7 @@ namespace UniverseWebApi.Controllers
         }
 
         // GET api/universe/5 
-        public async Task<UniverseDescriptor> GetAsync(int id)
+        public async Task<UniverseDefinition> GetAsync(int id)
         {
             var universeManagementService = new UniverseManagementService(new ServiceProxyFactory());
             var universe = await universeManagementService.GetUniverseDescriptorAsync(id.ToString());

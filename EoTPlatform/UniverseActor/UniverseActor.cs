@@ -5,6 +5,7 @@ using UniverseActor.Interfaces;
 using Common.Models;
 using System.Text;
 using System.Collections.Generic;
+using Microsoft.ServiceFabric.Actors;
 
 namespace UniverseActor
 {
@@ -22,9 +23,9 @@ namespace UniverseActor
         // Template
         public ActorTemplate template { get; private set; }
 
-        public UniverseActor(string id)
+        public UniverseActor(ActorId id)
         {
-            deviceId = id;
+            deviceId = id.ToString();
             sender = new MessageSender(deviceId, "HostName=eotiothub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
             receiver = new MessageReceiver(deviceId, "eotiothub.azure-devices.net", "iothubowner", "Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
         }
@@ -89,7 +90,7 @@ namespace UniverseActor
             hub = null;
         }
 
-        public Task SetTemplate(ActorTemplate template)
+        public Task Initialise(ActorTemplate template)
         {
             this.template = template;
             return Task.FromResult(true);

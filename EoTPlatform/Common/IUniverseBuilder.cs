@@ -9,6 +9,6 @@ namespace Common.Interfaces
         /**
          * Given a data file and a template this method will build the necessary infrastruture for a universe
          **/
-        Task<UniverseDescriptor> BuildUniverseAsync(string dataSourceFilePath, UniverseTemplate template);
+        Task<UniverseDefinition> BuildUniverseAsync(string dataSourceFilePath, UniverseTemplate template);
     }
 }

@@ -23,7 +23,7 @@ namespace UniverseActor
                 // For more information, see http://aka.ms/servicefabricactorsplatform
 
                 ActorRuntime.RegisterActorAsync<UniverseActor>(
-                   (context, actorType) => new ActorService(context, actorType, () => new UniverseActor(ActorId.CreateRandom().GetStringId()))).GetAwaiter().GetResult();
+                   (context, actorType) => new ActorService(context, actorType, () => new UniverseActor(ActorId.CreateRandom()))).GetAwaiter().GetResult();
 
                 Thread.Sleep(Timeout.Infinite);
             }

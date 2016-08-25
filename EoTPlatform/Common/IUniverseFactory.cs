@@ -10,6 +10,6 @@ namespace Common
 {
     public interface IUniverseFactory : IService
     {
-        Task<UniverseDescriptor> CreateUniverseAsync(UniverseSpecification specification);
+        Task<UniverseDefinition> CreateUniverseAsync(UniverseSpecification specification);
     }
 }

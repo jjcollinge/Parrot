@@ -4,6 +4,9 @@ using System.Fabric;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Runtime;
+using Common.Services;
+using Common.Models;
+using System.Collections.Generic;
 
 namespace UniverseScheduler
 {
@@ -22,7 +25,7 @@ namespace UniverseScheduler
                 // an instance of the class is created in this host process.
 
                 ServiceRuntime.RegisterServiceAsync("UniverseSchedulerType",
-                    context => new UniverseScheduler(context)).GetAwaiter().GetResult();
+                    context => new UniverseScheduler(context, new ServiceProxyFactory())).GetAwaiter().GetResult();
 
                 ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(UniverseScheduler).Name);
 

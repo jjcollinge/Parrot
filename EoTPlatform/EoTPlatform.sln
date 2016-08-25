@@ -17,15 +17,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniverseRegistry", "Univers
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniverseBuilder.Tests", "UniverseBuilder.Tests\UniverseBuilder.Tests.csproj", "{902EBE8C-5AB4-4565-A27C-C97B540B526C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniverseTemplateBuilder", "UniverseTemplateBuilder\UniverseTemplateBuilder.csproj", "{9B973B00-7C90-49DA-A004-42E0FE52DF0C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniverseTemplateBuilder.Tests", "UniverseTemplateBuilder.Tests\UniverseTemplateBuilder.Tests.csproj", "{EBC06561-5652-4FF0-860A-AC21872E997D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniverseBuilder.Mocks", "UniverseBuilder.Mocks\UniverseBuilder.Mocks.csproj", "{13D21C27-50FD-4FFD-A4B7-7C9E620D3D08}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniverseRegistry.Mocks", "UniverseRegistry.Mocks\UniverseRegistry.Mocks.csproj", "{5A7C316C-602B-44B6-B684-175D9845AE60}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniverseTemplateBuilder.Mocks", "UniverseTemplateBuilder.Mocks\UniverseTemplateBuilder.Mocks.csproj", "{DF5EAA0B-5214-43BE-96C4-AAEA031B5B62}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniverseTemplateLoader.Mocks", "UniverseTemplateLoader.Mocks\UniverseTemplateLoader.Mocks.csproj", "{B73D9207-D2C5-4F08-B404-206C485053A4}"
 EndProject
@@ -126,20 +120,6 @@ Global
 		{902EBE8C-5AB4-4565-A27C-C97B540B526C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{902EBE8C-5AB4-4565-A27C-C97B540B526C}.Release|x64.ActiveCfg = Release|Any CPU
 		{902EBE8C-5AB4-4565-A27C-C97B540B526C}.Release|x64.Build.0 = Release|Any CPU
-		{9B973B00-7C90-49DA-A004-42E0FE52DF0C}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{9B973B00-7C90-49DA-A004-42E0FE52DF0C}.Debug|x64.ActiveCfg = Debug|x64
-		{9B973B00-7C90-49DA-A004-42E0FE52DF0C}.Debug|x64.Build.0 = Debug|x64
-		{9B973B00-7C90-49DA-A004-42E0FE52DF0C}.Release|Any CPU.ActiveCfg = Release|x64
-		{9B973B00-7C90-49DA-A004-42E0FE52DF0C}.Release|x64.ActiveCfg = Release|x64
-		{9B973B00-7C90-49DA-A004-42E0FE52DF0C}.Release|x64.Build.0 = Release|x64
-		{EBC06561-5652-4FF0-860A-AC21872E997D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EBC06561-5652-4FF0-860A-AC21872E997D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EBC06561-5652-4FF0-860A-AC21872E997D}.Debug|x64.ActiveCfg = Debug|x64
-		{EBC06561-5652-4FF0-860A-AC21872E997D}.Debug|x64.Build.0 = Debug|x64
-		{EBC06561-5652-4FF0-860A-AC21872E997D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EBC06561-5652-4FF0-860A-AC21872E997D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EBC06561-5652-4FF0-860A-AC21872E997D}.Release|x64.ActiveCfg = Release|Any CPU
-		{EBC06561-5652-4FF0-860A-AC21872E997D}.Release|x64.Build.0 = Release|Any CPU
 		{13D21C27-50FD-4FFD-A4B7-7C9E620D3D08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{13D21C27-50FD-4FFD-A4B7-7C9E620D3D08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13D21C27-50FD-4FFD-A4B7-7C9E620D3D08}.Debug|x64.ActiveCfg = Debug|x64
@@ -156,14 +136,6 @@ Global
 		{5A7C316C-602B-44B6-B684-175D9845AE60}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5A7C316C-602B-44B6-B684-175D9845AE60}.Release|x64.ActiveCfg = Release|Any CPU
 		{5A7C316C-602B-44B6-B684-175D9845AE60}.Release|x64.Build.0 = Release|Any CPU
-		{DF5EAA0B-5214-43BE-96C4-AAEA031B5B62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF5EAA0B-5214-43BE-96C4-AAEA031B5B62}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DF5EAA0B-5214-43BE-96C4-AAEA031B5B62}.Debug|x64.ActiveCfg = Debug|x64
-		{DF5EAA0B-5214-43BE-96C4-AAEA031B5B62}.Debug|x64.Build.0 = Debug|x64
-		{DF5EAA0B-5214-43BE-96C4-AAEA031B5B62}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DF5EAA0B-5214-43BE-96C4-AAEA031B5B62}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DF5EAA0B-5214-43BE-96C4-AAEA031B5B62}.Release|x64.ActiveCfg = Release|Any CPU
-		{DF5EAA0B-5214-43BE-96C4-AAEA031B5B62}.Release|x64.Build.0 = Release|Any CPU
 		{B73D9207-D2C5-4F08-B404-206C485053A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B73D9207-D2C5-4F08-B404-206C485053A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B73D9207-D2C5-4F08-B404-206C485053A4}.Debug|x64.ActiveCfg = Debug|x64

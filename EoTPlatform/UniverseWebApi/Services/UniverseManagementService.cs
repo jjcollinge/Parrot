@@ -56,14 +56,14 @@ namespace UniverseWebApi.Services
             await registry.DeregisterUniverseAsync(universeId);
         }
 
-        public async Task<UniverseDescriptor> GetUniverseDescriptorAsync(string universeId)
+        public async Task<UniverseDefinition> GetUniverseDescriptorAsync(string universeId)
         {
             var registry = proxyFactory.CreateUniverseRegistryServiceProxy(new Uri("fabric:/EoTPlatform/UniverseRegistry"));
             var universe = await registry.GetUniverseAsync(universeId);
             return universe;
         }
 
-        public async Task<Dictionary<string, UniverseDescriptor>> GetUniverseDescriptorsAsync()
+        public async Task<Dictionary<string, UniverseDefinition>> GetUniverseDescriptorsAsync()
         {
             var registry = proxyFactory.CreateUniverseRegistryServiceProxy(new Uri("fabric:/EoTPlatform/UniverseRegistry"));
             var universes = await registry.GetUniversesAsync();

@@ -10,9 +10,9 @@ namespace UniverseFactory.Mocks
 {
     public class MockUniverseFactory : IUniverseFactory
     {
-        public Task<UniverseDescriptor> CreateUniverseAsync(UniverseSpecification specification)
+        public Task<UniverseDefinition> CreateUniverseAsync(UniverseSpecification specification)
         {
-            return Task.FromResult(new UniverseDescriptor(new Dictionary<string, List<string>>()));
+            return Task.FromResult(new UniverseDefinition());
         }
     }
 }

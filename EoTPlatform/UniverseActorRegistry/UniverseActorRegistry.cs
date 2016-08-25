@@ -10,6 +10,7 @@ using Microsoft.ServiceFabric.Services.Runtime;
 using Common;
 using Common.Models;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
+using Microsoft.ServiceFabric.Actors;
 
 namespace UniverseActorRegistry
 {
@@ -20,33 +21,80 @@ namespace UniverseActorRegistry
     {
         //TODO: Consider piggy backging the actor services
         // Change read/write behaviour to exception proof
+        private static string actorDictionary = "actors";
+
+        private Task<IReliableDictionary<string, ActorId>> _actorIds => this.StateManager.GetOrAddAsync<IReliableDictionary<string, ActorId>>(actorDictionary);
 
         public UniverseActorRegistry(StatefulServiceContext context)
             : base(context)
         { }
 
-        public async Task RegisterUniverseActorAsync(ActorTemplate actor)
+        public async Task<IDictionary<string, ActorId>> GetRegisteredActorsAsync()
         {
-            var actors = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, string>>("actors");
+            var actorIdsToReturn = new Dictionary<string, ActorId>();
+
+            var actorIds = await _actorIds;
 
             using (var tx = this.StateManager.CreateTransaction())
             {
-                await actors.SetAsync(tx, actor.Id, actor.Type);
+                var enumerable = await actorIds.CreateEnumerableAsync(tx);
+                var enumerator = enumerable.GetAsyncEnumerator();
+                var cancelToken = new CancellationToken();
+                while(enumerator.MoveNextAsync(cancelToken) != null)
+                {
+                    actorIdsToReturn.Add(enumerator.Current.Key, enumerator.Current.Value);
+                }
+            }
+
+            return actorIdsToReturn;
+        }
+
+
+        public async Task<KeyValuePair<string, ActorId>> GetRegisteredActorAsync(string actorIdAsString)
+        {
+            var actorId = new KeyValuePair<string, ActorId>();
+
+            var actorIds = await _actorIds;
+
+            using (var tx = this.StateManager.CreateTransaction())
+            {
+                var result = await actorIds.TryGetValueAsync(tx, actorIdAsString);
+
+                if (result.HasValue)
+                    actorId = new KeyValuePair<string, ActorId>(actorIdAsString, result.Value);
+            }
+
+            return actorId;
+        }
+
+        public async Task RegisterUniverseActorAsync(string actorIdAsString, ActorId actorId)
+        {
+            var actorIds = await _actorIds;
+
+            using (var tx = this.StateManager.CreateTransaction())
+            {
+                var success = await actorIds.TryAddAsync(tx, actorIdAsString, actorId);
+
+                if (success)
+                    ServiceEventSource.Current.ServiceMessage(this, $"Successfully registered actor id {actorIdAsString}");
+                else
+                    ServiceEventSource.Current.ServiceMessage(this, $"Failed to registered actor id {actorIdAsString}");
+
                 await tx.CommitAsync();
             }
         }
 
-        public async Task RegisterUniverseActorListAsync(List<ActorTemplate> actorList)
+        public async Task RegisterUniverseActorsAsync(IDictionary<string, ActorId> actorIds)
         {
-            foreach(var actor in actorList)
+            foreach (var actorId in actorIds)
             {
-                await RegisterUniverseActorAsync(actor);
+                await RegisterUniverseActorAsync(actorId.Key, actorId.Value);
             }
         }
 
         public async Task DeregisterAllUniverseActorsAsync()
         {
-            var actors = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, string>>("actors");
+            var actors = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, ActorId>>(actorDictionary);
 
             using (var tx = this.StateManager.CreateTransaction())
             {
@@ -55,24 +103,17 @@ namespace UniverseActorRegistry
             }
         }
 
-        public async Task DeregisterUniverseActorAsync(string actorId)
+        public async Task DeregisterUniverseActorAsync(string actorIdAsString)
         {
-            var actors = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, string>>("actors");
+            var actors = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, ActorId>>("actors");
 
             using (var tx = this.StateManager.CreateTransaction())
             {
-                await actors.TryRemoveAsync(tx, actorId); //TODO: Handle failure
+                await actors.TryRemoveAsync(tx, actorIdAsString); //TODO: Handle failure
                 await tx.CommitAsync();
             }
         }
 
-        /// <summary>
-        /// Optional override to create listeners (e.g., HTTP, Service Remoting, WCF, etc.) for this service replica to handle client or user requests.
-        /// </summary>
-        /// <remarks>
-        /// For more information on service communication, see http://aka.ms/servicefabricservicecommunication
-        /// </remarks>
-        /// <returns>A collection of listeners.</returns>
         protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
         {
             return new[]

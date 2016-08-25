@@ -1,15 +1,31 @@
 {
-    "id": "0",
-    "actorTemplates":[
+    "id": "universe123124",
+    "version": "0.1",
+    "actorTemplates": [
         {
-            "id": "0",
-            "type": "train",
-            "publishers": ["1"] 
-        },
-        {
-            "id": "1",
-            "type": "trackSection",
-            "publishers": []
+            "id": "ABC123",
+            "metadata": {
+                "country": "UK",
+                "route": "R12",
+                "section": "S22",
+                "mdu": "mdu33"
+            },
+            "properties": {
+                "x": {
+                    "value": "3",
+                    "type": "int",
+                    "unit": "m"
+                },
+                "y": {
+                    "value": "9.2",
+                    "type": "double",
+                    "unit": "mph"
+                }
+            },
+            "commands": [
+                "open",
+                "close"
+            ]
         }
     ]
 }

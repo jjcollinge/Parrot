@@ -7,11 +7,11 @@ namespace Common.Interfaces
 {
     public interface IUniverseRegistry : IService
     {
-        Task RegisterUniverseAsync(UniverseDescriptor universe);
+        Task RegisterUniverseAsync(UniverseDefinition universe);
         Task DeregisterUniverseAsync(string id);
 
-        Task<Dictionary<string, UniverseDescriptor>> GetUniversesAsync();
+        Task<Dictionary<string, UniverseDefinition>> GetUniversesAsync();
 
-        Task<UniverseDescriptor> GetUniverseAsync(string universeId);
+        Task<UniverseDefinition> GetUniverseAsync(string universeId);
     }
 }

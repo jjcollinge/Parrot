@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace UniverseScheduler.Mocks
             return Task.FromResult(true);
         }
 
-        public Task StartAsync(string dataFilePath, int delayInMs)
+        public Task StartAsync(string dataFilePath, UniverseDefinition universe)
         {
             return Task.FromResult(true);
         }

@@ -44,11 +44,13 @@ namespace TestConsoleApplicationClient
             string currentFolderPath = Environment.CurrentDirectory;
             string projectFolderPath = currentFolderPath.Substring(0, currentFolderPath.IndexOf("bin"));
             string universeTemplateFilePath = $"{projectFolderPath}\\UniverseTemplate.json";
+            string universeDataSourceFilePath = $"{projectFolderPath}\\UniverseData.csv";
 
             var universeSpecfication = new UniverseSpecification
             {
                 Id = "0",
-                UniverseTemplateFilePath = universeTemplateFilePath
+                UniverseTemplateFilePath = universeTemplateFilePath,
+                UniverseDataSourceFilePath = universeDataSourceFilePath
             };
 
             var universeFactoryAddress = new Uri("fabric:/EoTPlatform/UniverseFactory");

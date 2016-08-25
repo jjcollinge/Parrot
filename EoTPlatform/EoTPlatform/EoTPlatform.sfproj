@@ -33,7 +33,6 @@
     <ProjectReference Include="..\UniverseFactory\UniverseFactory.csproj" />
     <ProjectReference Include="..\UniverseRegistry\UniverseRegistry.csproj" />
     <ProjectReference Include="..\UniverseScheduler\UniverseScheduler.csproj" />
-    <ProjectReference Include="..\UniverseTemplateBuilder\UniverseTemplateBuilder.csproj" />
     <ProjectReference Include="..\UniverseTemplateLoader\UniverseTemplateLoader.csproj" />
     <ProjectReference Include="..\UniverseWebApi\UniverseWebApi.csproj" />
   </ItemGroup>

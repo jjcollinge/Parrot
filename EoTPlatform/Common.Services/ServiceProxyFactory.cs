@@ -37,11 +37,6 @@ namespace Common.Services
             return ServiceProxy.Create<IUniverseScheduler>(serviceAddress);
         }
 
-        public IUniverseTemplateBuilder CreateUniverseTemplateBuilderServiceProxy(Uri serviceAddress)
-        {
-            return ServiceProxy.Create<IUniverseTemplateBuilder>(serviceAddress);
-        }
-
         public IUniverseTemplateLoader CreateUniverseTemplateLoaderServiceProxy(Uri serviceAddress)
         {
             return ServiceProxy.Create<IUniverseTemplateLoader>(serviceAddress);

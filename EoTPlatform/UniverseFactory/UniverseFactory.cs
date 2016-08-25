@@ -24,7 +24,7 @@ namespace UniverseFactory
             this.serviceFactory = serviceFactory;
         }
 
-        public async Task<UniverseDescriptor> CreateUniverseAsync(UniverseSpecification specification)
+        public async Task<UniverseDefinition> CreateUniverseAsync(UniverseSpecification specification)
         {
             // Assume universe template file exists
             // Could use specification id as partition id if required

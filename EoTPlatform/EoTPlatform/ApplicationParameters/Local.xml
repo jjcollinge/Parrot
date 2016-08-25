@@ -7,7 +7,6 @@
     <Parameter Name="UniverseActorRegistry_TargetReplicaSetSize" Value="3" />
     <Parameter Name="UniverseWebApi_InstanceCount" Value="1" />
     <Parameter Name="UniverseFactory_InstanceCount" Value="1" />
-    <Parameter Name="UniverseTemplateBuilder_InstanceCount" Value="1" />
     <Parameter Name="UniverseRegistry_PartitionCount" Value="1" />
     <Parameter Name="UniverseRegistry_MinReplicaSetSize" Value="3" />
     <Parameter Name="UniverseRegistry_TargetReplicaSetSize" Value="3" />

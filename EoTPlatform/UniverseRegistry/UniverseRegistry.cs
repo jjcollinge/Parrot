@@ -23,10 +23,10 @@ namespace UniverseRegistry
         /**
          * Iterates through each stored universe and compiles a dictionary of ids with descriptors
          **/
-        public async Task<Dictionary<string, UniverseDescriptor>> GetUniversesAsync()
+        public async Task<Dictionary<string, UniverseDefinition>> GetUniversesAsync()
         {
-            var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDescriptor>>("universes");
-            var universesDictionary = new Dictionary<string, UniverseDescriptor>();
+            var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDefinition>>("universes");
+            var universesDictionary = new Dictionary<string, UniverseDefinition>();
 
             //TODO: Should use immutable types
             using (var tx = this.StateManager.CreateTransaction())
@@ -47,9 +47,9 @@ namespace UniverseRegistry
         /**
          * Registers a new universe descriptor in the universe registry
          **/
-        public async Task RegisterUniverseAsync(UniverseDescriptor universe)
+        public async Task RegisterUniverseAsync(UniverseDefinition universe)
         {
-            var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDescriptor>>("universes");
+            var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDefinition>>("universes");
 
             using (var tx = this.StateManager.CreateTransaction())
             {
@@ -67,7 +67,7 @@ namespace UniverseRegistry
          **/
         public async Task DeregisterUniverseAsync(string id)
         {
-            var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDescriptor>>("universes");
+            var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDefinition>>("universes");
 
             using (var tx = this.StateManager.CreateTransaction())
             {
@@ -79,11 +79,11 @@ namespace UniverseRegistry
         /**
          * Grabs a specific universe descriptor from the universe registry provided it exists
          **/
-        public async Task<UniverseDescriptor> GetUniverseAsync(string universeId)
+        public async Task<UniverseDefinition> GetUniverseAsync(string universeId)
         {
-            var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDescriptor>>("universes");
+            var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDefinition>>("universes");
 
-            UniverseDescriptor descriptor = null;
+            UniverseDefinition descriptor = null;
             using (var tx = this.StateManager.CreateTransaction())
             {
                 var res = await universes.TryGetValueAsync(tx, universeId);
