@@ -17,7 +17,7 @@ namespace UniverseActor.Tests
         [TestMethod]
         public async Task TestSuccessfulIoTHubRegistration()
         {
-            var actor = new UniverseActor(new ActorId("test"));
+            var actor = new UniverseActor();
             var method = typeof(ActorBase).GetMethod("OnActivateAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             await (Task)method.Invoke(actor, null);
         }
@@ -25,7 +25,7 @@ namespace UniverseActor.Tests
         [TestMethod]
         public async Task TestSuccessfulIoTHubConnectionAndDeviceRemoval()
         {
-            var actor = new UniverseActor(new ActorId("test"));
+            var actor = new UniverseActor();
             var method1 = typeof(ActorBase).GetMethod("OnActivateAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             await (Task)method1.Invoke(actor, null);
 
@@ -46,7 +46,7 @@ namespace UniverseActor.Tests
         [TestMethod]
         public async Task TestIoTHubMessageSend()
         {
-            var actor = new UniverseActor(new ActorId("test"));
+            var actor = new UniverseActor();
             var method1 = typeof(ActorBase).GetMethod("OnActivateAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             await (Task)method1.Invoke(actor, null);
             await actor.SendMessageAsync("Hello World");

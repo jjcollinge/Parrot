@@ -25,6 +25,9 @@ namespace UniverseBuilder
         private IPlatformAbstraction platform;
         private IServiceProxyFactory proxyFactory;
 
+        private static string applicationName;
+        private static string randomPrefix;
+
         public UniverseBuilder(StatelessServiceContext context, IPlatformAbstraction platform, IServiceProxyFactory proxyFactory)
             : base(context)
         {
@@ -32,10 +35,19 @@ namespace UniverseBuilder
             this.proxyFactory = proxyFactory;
         }
 
-        public async Task<UniverseDefinition> BuildUniverseAsync(string dataSourceFilePath, UniverseTemplate template)
+        /// <summary>
+        /// Build a universe from a provided template description and start streaming events in from a provided data source file.
+        /// </summary>
+        /// <param name="eventStreamFilePath"></param>
+        /// <param name="template"></param>
+        /// <returns></returns>
+        public async Task<UniverseDefinition> BuildUniverseAsync(string eventStreamFilePath, UniverseTemplate template)
         {
             if (template == null)
                 return null;
+
+            applicationName = await platform.GetServiceContextApplicationNameAsync();
+            randomPrefix = new Random().Next(0, 99999).ToString();
 
             // Create empty universe definition
             var universeDefinition = new UniverseDefinition();
@@ -43,67 +55,117 @@ namespace UniverseBuilder
             // Create the universe actors
             var actorIds = await CreateUniverseActorsAsync(template.ActorTemplates);
 
-            // Create the services needed for the universe
-            await CreateUniverseActorRegistryAsync(actorIds, universeDefinition);
-            await CreateUniverseSchedulerAsync(dataSourceFilePath, universeDefinition);
+            if (actorIds.Count > 0)
+            {
+                // Create the services needed for the universe
+                await CreateUniverseActorRegistryAsync(actorIds, universeDefinition);
+                await CreateUniverseSchedulerAsync(eventStreamFilePath, universeDefinition);
 
-            //TODO: Compile custom plugin assembly files
+                //TODO: Compile custom plugin assembly files
 
-            // Return description of all the universe services and metadata 
+                // Return description of all the universe services and metadata 
+                universeDefinition.Status = Status.Running;
+            }
+            else
+            {
+                universeDefinition.Status = Status.Failed;
+            }
+
             return universeDefinition;
         }
 
+        /// <summary>
+        /// Create universe actors to represent the provided actors in the template file.
+        /// </summary>
+        /// <param name="actorTemplates"></param>
+        /// <returns></returns>
         private async Task<IDictionary<string, ActorId>> CreateUniverseActorsAsync(List<ActorTemplate> actorTemplates)
         {
             var actorIds = new Dictionary<string, ActorId>();
 
+            applicationName = await platform.GetServiceContextApplicationNameAsync();
             // Create and initialise an actor for each actor defined in the template
-            Parallel.ForEach<ActorTemplate>(actorTemplates, async (actorTemplate) => {
-                var actorId = new ActorId(actorTemplate.Id);
-                var actor = ActorProxy.Create<IUniverseActor>(actorId);
-                await actor.Initialise(actorTemplate);
-                actorIds.Add(actorTemplate.Id, actorId);
-            });
+            foreach(var template in actorTemplates)
+            {
+                var actorId = await platform.GetActorIdAsync(template.Id);
+                var actor = await platform.CreateUniverseActorProxyAsync(actorId, new Uri($"{applicationName}/UniverseActorService"));
+                await actor.SetupAsync(template);
+                actorIds.Add(template.Id, actorId);
+            }
 
             return actorIds;
         }
 
-        private async Task CreateUniverseSchedulerAsync(string dataSourceFilePath, UniverseDefinition universeDefinition)
+        /// <summary>
+        /// Create a scheduler to stream events into the actor network.
+        /// </summary>
+        /// <param name="eventStreamFilePath"></param>
+        /// <param name="universeDefinition"></param>
+        /// <returns></returns>
+        private async Task CreateUniverseSchedulerAsync(string eventStreamFilePath, UniverseDefinition universeDefinition)
         {
             // Create a new scheduler service
-            var appName = await platform.GetServiceContextApplicationNameAsync();
-            var randomPrefix = new Random().Next(0, 99999).ToString();
-            var serviceAddress = $"{appName}/UniverseScheduler{randomPrefix}";
-            var serviceName = new Uri(serviceAddress);
-            var serviceTypeName = "UniverseSchedulerType";
+            var serviceBaseName = "UniverseScheduler";
+            var serviceAddress = GetServiceAddress(serviceBaseName);
+            var serviceType = GetServiceType(serviceBaseName);
+            var serviceUri = new Uri(serviceAddress);
 
-            await platform.BuildServiceAsync(appName, serviceName, serviceTypeName, ServiceContextTypes.Stateless);
+            await platform.BuildServiceAsync(applicationName, serviceUri, serviceType, ServiceContextTypes.Stateless);
 
             // Start the event stream
-            var universeScheduler = proxyFactory.CreateUniverseScheduler(serviceName);
-            await universeScheduler.StartAsync(dataSourceFilePath, universeDefinition);
+            var universeScheduler = proxyFactory.CreateUniverseScheduler(serviceUri);
+            await universeScheduler.StartAsync(eventStreamFilePath, universeDefinition);
 
-            universeDefinition.AddServiceEndpoints(serviceTypeName, new List<string> { serviceAddress });
+            universeDefinition.AddServiceEndpoints(serviceType, new List<string> { serviceAddress });
         }
 
+        /// <summary>
+        /// Create a registry to map external Ids to internal actor Ids.
+        /// </summary>
+        /// <param name="actorIds"></param>
+        /// <param name="universeDefinition"></param>
+        /// <returns></returns>
         private async Task CreateUniverseActorRegistryAsync(IDictionary<string, ActorId> actorIds, UniverseDefinition universeDefinition)
         {
             // Create a new registry service
-            var appName = await platform.GetServiceContextApplicationNameAsync();
-            var randomPrefix = new Random().Next(0, 99999).ToString();
-            var serviceAddress = $"{appName}/UniverseActorRegistry{randomPrefix}";
-            var serviceName = new Uri(serviceAddress);
-            var serviceTypeName = "UniverseActorRegistryType";
+            var serviceBaseName = "UniverseActorRegistry";
+            var serviceAddress = GetServiceAddress(serviceBaseName);
+            var serviceType = GetServiceType(serviceBaseName);
+            var serviceUri = new Uri(serviceAddress);
 
-            await platform.BuildServiceAsync(appName, serviceName, serviceTypeName, ServiceContextTypes.Stateful);
+            await platform.BuildServiceAsync(applicationName, serviceUri, serviceType, ServiceContextTypes.Stateful);
 
             // Store each actor in the universes id in the registry
-            var universeActorRegistry = proxyFactory.CreateUniverseActorRegistryServiceProxy(serviceName);
+            var universeActorRegistry = proxyFactory.CreateUniverseActorRegistryServiceProxy(serviceUri);
             await universeActorRegistry.RegisterUniverseActorsAsync(actorIds);
 
-            universeDefinition.AddServiceEndpoints(serviceTypeName, new List<string> { serviceAddress });
+            universeDefinition.AddServiceEndpoints(serviceType, new List<string> { serviceAddress });
         }
 
+        /// <summary>
+        /// Compile a service's address based on it's base name.
+        /// </summary>
+        /// <param name="serviceBaseName"></param>
+        /// <returns></returns>
+        private string GetServiceAddress(string serviceBaseName)
+        {
+            return $"{applicationName}/{serviceBaseName}{randomPrefix}";
+        }
+
+        /// <summary>
+        /// Compile a service's type name based on it's base name.
+        /// </summary>
+        /// <param name="serviceBaseName"></param>
+        /// <returns></returns>
+        private string GetServiceType(string serviceBaseName)
+        {
+            return $"{serviceBaseName}Type";
+        }
+
+        /// <summary>
+        /// Create service listener endpoints
+        /// </summary>
+        /// <returns></returns>
         protected override IEnumerable<ServiceInstanceListener> CreateServiceInstanceListeners()
         {
             return new[]

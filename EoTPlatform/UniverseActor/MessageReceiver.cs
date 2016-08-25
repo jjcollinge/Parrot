@@ -19,6 +19,10 @@ namespace UniverseActor
             this.client = DeviceClient.Create(hostname, new DeviceAuthenticationWithSharedAccessPolicyKey(deviceId, policyName, deviceKey));
         }
 
+        /// <summary>
+        /// Receive a message from the cloud and parse it into a string.
+        /// </summary>
+        /// <returns></returns>
         public async Task<string> ReceiveMessageAsync()
         {
             var message = await client.ReceiveAsync();

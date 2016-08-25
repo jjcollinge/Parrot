@@ -10,7 +10,7 @@ namespace UniverseBuilder.Mocks
 {
     public class MockUniverseBuilder : IUniverseBuilder
     {
-        public async Task<UniverseDefinition> BuildUniverseAsync(string dataSourceFilePath, UniverseTemplate template)
+        public async Task<UniverseDefinition> BuildUniverseAsync(string eventStreamFilePath, UniverseTemplate template)
         {
             return new UniverseDefinition();
         }

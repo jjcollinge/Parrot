@@ -24,10 +24,10 @@ namespace UniverseBuilder.Tests
             var platform = new MockPlatformAbstraction();
             var factory = new MockServiceProxyFactory();
             var universeBuilder = new UniverseBuilder(null, platform, factory);
-            var universeDescriptor = await universeBuilder.BuildUniverseAsync("datasourcepath", universeTemplate);
-            Assert.IsNotNull(universeDescriptor);
-            Assert.IsNotNull(universeDescriptor.ServiceEndpoints);
-            Assert.IsTrue(universeDescriptor.ServiceEndpoints.Count == 1);
+            var universeDefinition = await universeBuilder.BuildUniverseAsync("eventStreamFilePathpath", universeTemplate);
+            Assert.IsNotNull(universeDefinition);
+            Assert.IsNotNull(universeDefinition.ServiceEndpoints);
+            Assert.IsTrue(universeDefinition.ServiceEndpoints.Count == 2);
         }
     }
 }

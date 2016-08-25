@@ -15,7 +15,7 @@ namespace UniverseScheduler.Mocks
             return Task.FromResult(true);
         }
 
-        public Task StartAsync(string dataFilePath, UniverseDefinition universe)
+        public Task StartAsync(string eventStreamFilePath, UniverseDefinition universe)
         {
             return Task.FromResult(true);
         }

@@ -59,7 +59,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataStreamEvent.cs" />
-    <Compile Include="ActorRelationship.cs" />
     <Compile Include="ActorTemplate.cs" />
     <Compile Include="ActorTemplateProperty.cs" />
     <Compile Include="UniverseDefinition.cs" />

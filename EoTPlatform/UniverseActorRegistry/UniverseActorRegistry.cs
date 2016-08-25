@@ -40,7 +40,7 @@ namespace UniverseActorRegistry
                 var enumerable = await actorIds.CreateEnumerableAsync(tx);
                 var enumerator = enumerable.GetAsyncEnumerator();
                 var cancelToken = new CancellationToken();
-                while(enumerator.MoveNextAsync(cancelToken) != null)
+                while(await enumerator.MoveNextAsync(cancelToken))
                 {
                     actorIdsToReturn.Add(enumerator.Current.Key, enumerator.Current.Value);
                 }

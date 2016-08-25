@@ -15,7 +15,6 @@ namespace UniverseFactory
 {
     public sealed class UniverseFactory : StatelessService, IUniverseFactory
     {
-        //TODO: Consider packaging into NuGet
         private IServiceProxyFactory serviceFactory;
 
         public UniverseFactory(StatelessServiceContext context, IServiceProxyFactory serviceFactory)
@@ -24,6 +23,11 @@ namespace UniverseFactory
             this.serviceFactory = serviceFactory;
         }
 
+        /// <summary>
+        /// Create a new universe based on a given specification.
+        /// </summary>
+        /// <param name="specification"></param>
+        /// <returns></returns>
         public async Task<UniverseDefinition> CreateUniverseAsync(UniverseSpecification specification)
         {
             // Assume universe template file exists
@@ -38,7 +42,7 @@ namespace UniverseFactory
             // Build universe
             var universeBuilderAddress = new Uri("fabric:/EoTPlatform/UniverseBuilder");
             var universeBuilder = serviceFactory.CreateUniverseBuilderServiceProxy(universeBuilderAddress);
-            var universeDescriptor = await universeBuilder.BuildUniverseAsync(specification.UniverseDataSourceFilePath, universeTemplate);
+            var universeDescriptor = await universeBuilder.BuildUniverseAsync(specification.UniverseEventStreamFilePath, universeTemplate);
 
             // Register the universe
             var universeRegistryAddress = new Uri("fabric:/EoTPlatform/UniverseRegistry");
@@ -49,6 +53,10 @@ namespace UniverseFactory
             return universeDescriptor;
         }
 
+        /// <summary>
+        /// Create service instance listener endpoints.
+        /// </summary>
+        /// <returns></returns>
         protected override IEnumerable<ServiceInstanceListener> CreateServiceInstanceListeners()
         {
             return new[]

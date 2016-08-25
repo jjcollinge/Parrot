@@ -29,22 +29,36 @@ namespace UniverseScheduler
             this.factory = factory;
         }
 
+        /// <summary>
+        /// Pause event streaming.
+        /// </summary>
+        /// <returns></returns>
         public Task PauseAsync()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Unpause event streaming.
+        /// </summary>
+        /// <returns></returns>
         public Task UnpauseAsync()
         {
             throw new NotImplementedException();
         }
 
-        public async Task StartAsync(string dataFilePath, UniverseDefinition universeDefinition)
+        /// <summary>
+        /// Setup event stream and begin streaming.
+        /// </summary>
+        /// <param name="eventStreamFilePath"></param>
+        /// <param name="universeDefinition"></param>
+        /// <returns></returns>
+        public async Task StartAsync(string eventStreamFilePath, UniverseDefinition universeDefinition)
         {
             IList<CsvRow> rows = new List<CsvRow>();
 
             // Read file into memory
-            using (var reader = new CsvFileReader(dataFilePath))
+            using (var reader = new CsvFileReader(eventStreamFilePath))
             {
                 rows = reader.ReadFile();
             }
@@ -62,19 +76,34 @@ namespace UniverseScheduler
             // TODO: Local caching with periodic refreshes
             var actorIds = await registry.GetRegisteredActorsAsync();
 
-            // Stream events
-            Parallel.ForEach<DataStreamEvent>(eventStream, (evt) => {
-                var actor = ActorProxy.Create<IUniverseActor>(actorIds[evt.TargetActorId]);
-                actor.SendMessageAsync(evt.Payload);
-            });
-                
+            // Stream events [Will be refactored heavily]
+            var actorId = actorIds[eventStream[0].TargetActorId];
+            var actor = ActorProxy.Create<IUniverseActor>(actorId);
+            await actor.SendMessageAsync("Hello World");
+
+
+            //foreach(var evt in eventStream)
+            //{
+            //    var actor = ActorProxy.Create<IUniverseActor>(actorIds[evt.TargetActorId]);
+            //    await actor.SendMessageAsync(evt.Payload);
+            //}   
         }
 
+        /// <summary>
+        /// Validate actors in event stream source match the actors in the universe template
+        /// </summary>
+        /// <param name="eventStream"></param>
+        /// <returns></returns>
         private Task<bool> ValidateEventStreamActorsAsync(object eventStream)
         {
             return Task.FromResult(true);
         }
 
+        /// <summary>
+        /// Parse the CSV rows and generate an event stream.
+        /// </summary>
+        /// <param name="rows"></param>
+        /// <returns></returns>
         private List<DataStreamEvent> CalculateEventStream(IList<CsvRow> rows)
         {
             List<DataStreamEvent> events = new List<DataStreamEvent>();
@@ -86,7 +115,7 @@ namespace UniverseScheduler
 
                 dataEvent.TargetActorId = row[1];
 
-                for(int i = 2; i < row.Count; i++)
+                for (int i = 2; i < row.Count; i++)
                 {
                     dataEvent.Payload += $"{row[i]} ";
                 }
@@ -95,6 +124,10 @@ namespace UniverseScheduler
             return events;
         }
 
+        /// <summary>
+        /// Stop the universe event stream.
+        /// </summary>
+        /// <returns></returns>
         public Task StopAsync()
         {
             throw new NotImplementedException();

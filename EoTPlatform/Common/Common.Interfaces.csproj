@@ -117,6 +117,10 @@
       <Project>{F85CFF0C-E291-4ABB-BB47-32CCB052AD0A}</Project>
       <Name>Common.Models</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UniverseActor.Interfaces\UniverseActor.Interfaces.csproj">
+      <Project>{390A1835-0B2A-400D-B357-A7B852CAAA4F}</Project>
+      <Name>UniverseActor.Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.ServiceFabric.Actors.2.1.163\build\Microsoft.ServiceFabric.Actors.targets" Condition="Exists('..\packages\Microsoft.ServiceFabric.Actors.2.1.163\build\Microsoft.ServiceFabric.Actors.targets')" />

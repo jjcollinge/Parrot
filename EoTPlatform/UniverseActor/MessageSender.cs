@@ -18,6 +18,11 @@ namespace UniverseActor
             this.client = ServiceClient.CreateFromConnectionString(connStr);
         }
 
+        /// <summary>
+        /// Send a message to the cloud.
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns></returns>
         public async Task SendMessageAsync(byte[] msg)
         {
             await client.SendAsync(deviceId, new Message(msg));

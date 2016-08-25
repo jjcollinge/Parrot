@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.ServiceFabric.Actors;
+using System;
 using System.Collections.Generic;
 using System.Fabric;
 using System.Threading.Tasks;
+using UniverseActor.Interfaces;
 
 namespace Common.Interfaces
 {
@@ -12,6 +14,8 @@ namespace Common.Interfaces
         Task<string> GetServiceContextApplicationNameAsync();
         Task<ServiceContext> GetServiceContextAsync();
         Task BuildServiceAsync(string applicationName, Uri serviceAddress, string serviceTypeName, ServiceContextTypes type);
+        Task<IUniverseActor> CreateUniverseActorProxyAsync(ActorId actorId, Uri serviceAddress);
+        Task<ActorId> GetActorIdAsync(string actorIdAsString);
     }
 
     public enum ServiceContextTypes

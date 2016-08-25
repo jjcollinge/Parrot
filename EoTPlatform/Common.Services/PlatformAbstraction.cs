@@ -1,8 +1,11 @@
 ﻿using Common.Interfaces;
+using Microsoft.ServiceFabric.Actors;
+using Microsoft.ServiceFabric.Actors.Client;
 using System;
 using System.Fabric;
 using System.Fabric.Description;
 using System.Threading.Tasks;
+using UniverseActor.Interfaces;
 
 namespace Common.Services
 {
@@ -57,6 +60,16 @@ namespace Common.Services
         public Task<string> GetServiceContextApplicationNameAsync()
         {
             return Task.FromResult(context.CodePackageActivationContext.ApplicationName);
+        }
+
+        public Task<IUniverseActor> CreateUniverseActorProxyAsync(ActorId actorId, Uri serviceAddress)
+        {
+            return Task.FromResult(ActorProxy.Create<IUniverseActor>(actorId, serviceAddress));
+        }
+
+        public Task<ActorId> GetActorIdAsync(string actorIdAsString)
+        {
+            return Task.FromResult(ActorId.CreateRandom());
         }
     }
 }

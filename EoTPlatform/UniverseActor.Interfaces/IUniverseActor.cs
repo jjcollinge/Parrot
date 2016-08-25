@@ -20,6 +20,6 @@ namespace UniverseActor.Interfaces
         Task ReceiveMessageAsync();
         Task SendMessageAsync(string msg);
         //TODO: Needs DI
-        Task Initialise(ActorTemplate template);
+        Task SetupAsync(ActorTemplate template);
     }
 }
