@@ -38,12 +38,12 @@ namespace TestConsoleApplicationClient
                     Console.WriteLine($"{service.Key}: ");
                     foreach (var endpoint in service.Value)
                     {
-                        Console.WriteLine($"{endpoint}");
+                        Console.Write($" {endpoint}");
                     }
                     
                 }
-                Console.WriteLine(Environment.NewLine);
                 Console.WriteLine(new String('-', 10));
+                Console.WriteLine(Environment.NewLine);
             }
         }
 

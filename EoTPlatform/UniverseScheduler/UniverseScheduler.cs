@@ -76,17 +76,16 @@ namespace UniverseScheduler
             // TODO: Local caching with periodic refreshes
             var actorIds = await registry.GetRegisteredActorsAsync();
 
-            // Stream events [Will be refactored heavily]
-            var actorId = actorIds[eventStream[0].TargetActorId];
-            var actor = ActorProxy.Create<IUniverseActor>(actorId);
-            await actor.SendMessageAsync("Hello World");
+            // Stream events [Will be refactored heavily to reflect proper scheduler]
+            foreach(var evt in eventStream)
+            {
+                // Wait until the right time
+                await Task.Delay(evt.Key);
 
-
-            //foreach(var evt in eventStream)
-            //{
-            //    var actor = ActorProxy.Create<IUniverseActor>(actorIds[evt.TargetActorId]);
-            //    await actor.SendMessageAsync(evt.Payload);
-            //}   
+                var actorId = actorIds[evt.Value.TargetId];
+                var actor = ActorProxy.Create<IUniverseActor>(actorId);
+                await actor.SendMessageAsync(evt.Value.Payload);
+            }
         }
 
         /// <summary>
@@ -104,22 +103,38 @@ namespace UniverseScheduler
         /// </summary>
         /// <param name="rows"></param>
         /// <returns></returns>
-        private List<DataStreamEvent> CalculateEventStream(IList<CsvRow> rows)
+        private List<KeyValuePair<TimeSpan, DataStreamEvent>> CalculateEventStream(IList<CsvRow> rows)
         {
-            List<DataStreamEvent> events = new List<DataStreamEvent>();
-            foreach (var row in rows)
+            // Assumes row is in format: [TimeStamp, Id, PropertyA, PropertyB...]
+
+            var events = new List<KeyValuePair<TimeSpan, DataStreamEvent>>();
+
+            // Assume data is ordered
+            DateTime baseTime = DateTime.MinValue;
+
+            for(int i = 0; i < rows.Count; i++)
             {
-                var dataEvent = new DataStreamEvent();
+                var row = rows[i];
+                
+                // Parse time
+                var evt = new DataStreamEvent();
                 var dateTimeStr = Regex.Replace(row[0].Trim(), "[^0-9/:]", " ");
-                dataEvent.DueTime = DateTime.ParseExact(dateTimeStr, "dd/MM/yyyy HH:mm:ss", null);
+                var originalTime = DateTime.ParseExact(dateTimeStr, "dd/MM/yyyy HH:mm:ss", null);
 
-                dataEvent.TargetActorId = row[1];
+                if (baseTime == DateTime.MinValue)
+                    baseTime = originalTime;
 
-                for (int i = 2; i < row.Count; i++)
+                var deltaTimeSpan = originalTime - baseTime;
+
+                evt.TargetId = row[1];
+
+                // Parse payload
+                for (int j = 2; j < row.Count; j++)
                 {
-                    dataEvent.Payload += $"{row[i]} ";
+                    evt.Payload += $"{row[j]} ";
                 }
-                events.Add(dataEvent);
+
+                events.Add(new KeyValuePair<TimeSpan, DataStreamEvent>(deltaTimeSpan, evt));
             }
             return events;
         }

@@ -11,9 +11,7 @@ namespace Common.Models
     public class DataStreamEvent
     {
         [DataMember]
-        public DateTime DueTime { get; set; }
-        [DataMember]
-        public string TargetActorId { get; set; }
+        public string TargetId { get; set; }
         [DataMember]
         public string Payload { get; set; }
     }

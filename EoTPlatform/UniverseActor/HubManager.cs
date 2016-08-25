@@ -34,7 +34,8 @@ namespace UniverseActor
             catch (Exception ex)
             {
                 //TODO: Handle exception
-                throw ex;
+                // For some reason DeviceAlreadyExistsException is landing here
+                device = await registryManager.GetDeviceAsync(deviceId);
             }
 
             ActorEventSource.Current.Message("Generated device key: {0}", device.Authentication.SymmetricKey.PrimaryKey);

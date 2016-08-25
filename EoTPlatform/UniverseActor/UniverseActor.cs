@@ -114,12 +114,13 @@ namespace UniverseActor
             commands = new CommandService(new List<string>(this.template.Commands));
 
             // Initialise communication services
-            sender = new MessageSender(this.Id.ToString(), "HostName=eotiothub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
-            receiver = new MessageReceiver(this.Id.ToString(), "eotiothub.azure-devices.net", "iothubowner", "Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
+            var cloudId = template.Id;
+            sender = new MessageSender(cloudId, "HostName=eotiothub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
+            receiver = new MessageReceiver(cloudId, "eotiothub.azure-devices.net", "iothubowner", "Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
 
             // Create new Hub Manager and register this actor using the external template id with the cloud gateway.
             hub = new HubManager("HostName=eotiothub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
-            await hub.RegisterAsync(this.template.Id);
+            await hub.RegisterAsync(cloudId);
         }
     }
 }
