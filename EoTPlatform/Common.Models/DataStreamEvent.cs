@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 namespace Common.Models
 {
     [DataContract]
-    public class DataStreamEvent
+    public class DataEvent
     {
+        [DataMember]
+        public TimeSpan TimeOffset { get; set; }
         [DataMember]
         public string TargetId { get; set; }
         [DataMember]

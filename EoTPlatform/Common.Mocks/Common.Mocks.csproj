@@ -62,8 +62,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MockAsyncEnumerable.cs" />
     <Compile Include="MockPlatformAbstraction.cs" />
+    <Compile Include="MockReliableDictionary.cs" />
+    <Compile Include="MockReliableQueue.cs" />
+    <Compile Include="MockReliableStateManager.cs" />
     <Compile Include="MockServiceProxyFactory.cs" />
+    <Compile Include="MockTransaction.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.Interfaces.csproj">
@@ -77,6 +82,10 @@
     <ProjectReference Include="..\UniverseActor.Interfaces\UniverseActor.Interfaces.csproj">
       <Project>{390a1835-0b2a-400d-b357-a7b852caaa4f}</Project>
       <Name>UniverseActor.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UniverseActor.Mocks\UniverseActor.Mocks.csproj">
+      <Project>{522C5EB6-C4DB-4642-BFA4-D1EF0C4FA7C4}</Project>
+      <Name>UniverseActor.Mocks</Name>
     </ProjectReference>
     <ProjectReference Include="..\UniverseActorRegistry.Mock\UniverseActorRegistry.Mock.csproj">
       <Project>{FBE15849-FAF5-413A-BEA9-465699E816B7}</Project>

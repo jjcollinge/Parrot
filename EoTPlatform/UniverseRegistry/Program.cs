@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Runtime;
+using Microsoft.ServiceFabric.Data;
 
 namespace UniverseRegistry
 {
@@ -22,7 +23,7 @@ namespace UniverseRegistry
 
                 //TODO: Remove default services
                 ServiceRuntime.RegisterServiceAsync("UniverseRegistryType",
-                    context => new UniverseRegistry(context)).GetAwaiter().GetResult();
+                    context => new UniverseRegistry(context, new ReliableStateManager(context))).GetAwaiter().GetResult();
 
                 ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(UniverseRegistry).Name);
 

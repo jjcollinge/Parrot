@@ -4,10 +4,6 @@ using Common.Models;
 using Microsoft.ServiceFabric.Services.Client;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TestConsoleApplicationClient
 {
@@ -38,7 +34,7 @@ namespace TestConsoleApplicationClient
                     Console.WriteLine($"{service.Key}: ");
                     foreach (var endpoint in service.Value)
                     {
-                        Console.Write($" {endpoint}");
+                        Console.WriteLine($"\t{endpoint}");
                     }
                     
                 }

@@ -98,7 +98,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="TestLoadJsonTemplate.cs" />
+    <Compile Include="TestUniverseTemplateLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

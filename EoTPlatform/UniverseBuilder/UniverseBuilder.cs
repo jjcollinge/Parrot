@@ -114,7 +114,9 @@ namespace UniverseBuilder
 
             // Start the event stream
             var universeScheduler = proxyFactory.CreateUniverseScheduler(serviceUri);
-            await universeScheduler.StartAsync(eventStreamFilePath, universeDefinition);
+            await universeScheduler.LoadEventStreamAsync(eventStreamFilePath);
+            await universeScheduler.LoadUniverseDefinitionAsync(universeDefinition);
+            await universeScheduler.StartAsync();
 
             universeDefinition.AddServiceEndpoints(serviceType, new List<string> { serviceAddress });
         }

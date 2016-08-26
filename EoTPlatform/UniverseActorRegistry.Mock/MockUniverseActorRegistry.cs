@@ -28,7 +28,9 @@ namespace UniverseActorRegistry.Mocks
 
         public async Task<IDictionary<string, ActorId>> GetRegisteredActorsAsync()
         {
-            return new Dictionary<string, ActorId>();
+            return new Dictionary<string, ActorId>{
+                { "MOCK", ActorId.CreateRandom() }
+            };
         }
 
         public Task RegisterUniverseActorAsync(string actorIdAsString, ActorId actorId)

@@ -1,12 +1,10 @@
 ﻿using Common.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Fabric;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors;
 using UniverseActor.Interfaces;
+using UniverseActor.Mocks;
 
 namespace Common.Mocks
 {
@@ -27,9 +25,9 @@ namespace Common.Mocks
             return Task.FromResult("fabric:/mock/mock");
         }
 
-        public Task<IUniverseActor> CreateUniverseActorProxyAsync(ActorId actorId, Uri serviceAddress)
+        public async Task<IUniverseActor> CreateUniverseActorProxyAsync(ActorId actorId, Uri serviceAddress)
         {
-            return null;
+            return new MockUniverseActor();
         }
 
         public Task<ActorId> GetActorIdAsync(string actorIdAsString)

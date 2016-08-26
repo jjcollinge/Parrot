@@ -9,6 +9,7 @@ using Microsoft.ServiceFabric.Services.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 using Common.Models;
 using Common.Interfaces;
+using Microsoft.ServiceFabric.Data;
 
 namespace UniverseRegistry
 {
@@ -16,13 +17,14 @@ namespace UniverseRegistry
     {
         //TODO: Change read/write behaviour to exception proof
 
-        public UniverseRegistry(StatefulServiceContext context)
-            : base(context)
+        public UniverseRegistry(StatefulServiceContext context, IReliableStateManagerReplica stateManager)
+            : base(context, stateManager)
         { }
 
-        /**
-         * Iterates through each stored universe and compiles a dictionary of ids with descriptors
-         **/
+        /// <summary>
+        /// Return metadata for all registered universes
+        /// </summary>
+        /// <returns></returns>
         public async Task<Dictionary<string, UniverseDefinition>> GetUniversesAsync()
         {
             var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDefinition>>("universes");
@@ -44,9 +46,11 @@ namespace UniverseRegistry
             return universesDictionary;
         }
 
-        /**
-         * Registers a new universe descriptor in the universe registry
-         **/
+        /// <summary>
+        /// Register a new universe.
+        /// </summary>
+        /// <param name="universe"></param>
+        /// <returns></returns>
         public async Task RegisterUniverseAsync(UniverseDefinition universe)
         {
             var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDefinition>>("universes");
@@ -62,9 +66,11 @@ namespace UniverseRegistry
             }
         }
 
-        /**
-         * Deregisters a universe from the universe registry
-         **/
+        /// <summary>
+        /// Deregister an existing universe.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task DeregisterUniverseAsync(string id)
         {
             var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDefinition>>("universes");
@@ -76,9 +82,11 @@ namespace UniverseRegistry
             }
         }
 
-        /**
-         * Grabs a specific universe descriptor from the universe registry provided it exists
-         **/
+        /// <summary>
+        /// Get a specific universe's metadata.
+        /// </summary>
+        /// <param name="universeId"></param>
+        /// <returns></returns>
         public async Task<UniverseDefinition> GetUniverseAsync(string universeId)
         {
             var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDefinition>>("universes");
@@ -93,6 +101,10 @@ namespace UniverseRegistry
             return descriptor;
         }
 
+        /// <summary>
+        /// Create service replicate listener endpoints.
+        /// </summary>
+        /// <returns></returns>
         protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
         {
             return new[]

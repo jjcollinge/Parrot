@@ -1,0 +1,18 @@
+{
+    "id": "universe123124",
+    "version": "0.1",
+    "books": [
+        {
+            "author" : "McConnell",
+            "title": "Rapid Development"
+        },
+        {
+            "author" : "Meyers",
+            "title": "More Effective C++"
+        },
+        {
+            "author" : "Fowler",
+            "title": "Patterns of Enterprise Application Architecture"
+        }
+    ]
+}

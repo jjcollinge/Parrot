@@ -24,25 +24,12 @@ namespace UniverseScheduler
         {
         }
 
-        public IList<CsvRow> ReadFile()
-        {
-            IList<CsvRow> rows = new List<CsvRow>();
-
-            CsvRow row = new CsvRow();
-            while (ReadRow(row))
-            {
-                rows.Add(row);
-            }
-
-            return rows;
-        }
-
         /// <summary>
         /// Reads a row of data from a CSV file
         /// </summary>
         /// <param name="row"></param>
         /// <returns></returns>
-        private bool ReadRow(CsvRow row)
+        public bool ReadRow(CsvRow row)
         {
             row.LineText = ReadLine();
             if (String.IsNullOrEmpty(row.LineText))

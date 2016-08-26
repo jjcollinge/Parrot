@@ -19,10 +19,6 @@ namespace UniverseTemplateLoader
             : base(context)
         { }
 
-        /**
-         * Matches the relevant loading method with the template file extension.
-         * .i.e. a .json file is handed to a json file loading method
-         **/
         public async Task<UniverseTemplate> LoadUniversalTemplateFromFileAsync(string templateFilePath)
         {
             //TODO: Add further validation to filepath
@@ -34,17 +30,23 @@ namespace UniverseTemplateLoader
             //TODO: Change to factory pattern and add support for more file types
             UniverseTemplate template = null;
 
-            if (ext.ToLowerInvariant() == ".json")
+            switch(ext.ToLowerInvariant())
             {
-                template = await LoadJsonTemplateAsync(templateFilePath);
+                case ".json":
+                    template = await LoadJsonTemplateAsync(templateFilePath);
+                    break;
+                default:
+                    throw new IOException("Unsupported file type");
             }
 
             return template;
         }
 
-        /**
-         * Loads a JSON template file into memory
-         **/
+        /// <summary>
+        /// Loads a universal template from a json file.
+        /// </summary>
+        /// <param name="templateFilePath"></param>
+        /// <returns></returns>
         private async Task<UniverseTemplate> LoadJsonTemplateAsync(string templateFilePath)
         {
             var universeTemplate = new UniverseTemplate();
@@ -55,7 +57,7 @@ namespace UniverseTemplateLoader
                 {
                     string json = reader.ReadToEnd();
 
-                    //TODO: Sort deserialization out
+                    // TODO: Sort deserialization out
                     IDictionary<string, object> jsonDictionary = await Task.Run(() => JsonConvert.DeserializeObject<IDictionary<string, object>>(json, new JsonConverter[] { new UniverseTemplateConverter() }));
                     foreach (var universeKey in jsonDictionary.Keys)
                     {
@@ -82,13 +84,17 @@ namespace UniverseTemplateLoader
                                 universeTemplate.ActorTemplates.Add(actor);
                             }
                         }
+                        else
+                        {
+                            throw new InvalidDataException("Invalid file format");
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
+                ServiceEventSource.Current.ServiceMessage(this, $"Failed to load universe template file due to expception {ex}");
                 throw ex;
-                //TODO: Handle exceptions
             }
 
             return universeTemplate;
