@@ -9,11 +9,21 @@ namespace TestClient
 {
     class Program
     {
+        private static string universeSchedulerAddress = "";
+
         static void Main(string[] args)
         {
             CreateUniverse();
             PrintUniverses();
+
+            StartUniverseEventStream();
             Console.ReadKey();
+        }
+
+        private static void StartUniverseEventStream()
+        {
+            var universeScheduler = ServiceProxy.Create<IUniverseScheduler>(new Uri(universeSchedulerAddress));
+            universeScheduler.StartAsync();
         }
 
         private static void PrintUniverses()
@@ -60,6 +70,8 @@ namespace TestClient
             var universeFactoryAddress = new Uri("fabric:/EoTPlatform/UniverseFactory");
             var universeFactory = ServiceProxy.Create<IUniverseFactory>(universeFactoryAddress);
             var universeDefinition = universeFactory.CreateUniverseAsync(universeSpecfication).GetAwaiter().GetResult();
+
+            universeSchedulerAddress = universeDefinition.ServiceEndpoints["UniverseSchedulerType"][0];
 
             return true;
         }

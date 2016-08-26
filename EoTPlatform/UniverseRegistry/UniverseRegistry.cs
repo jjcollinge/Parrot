@@ -17,8 +17,8 @@ namespace UniverseRegistry
     {
         //TODO: Change read/write behaviour to exception proof
 
-        public UniverseRegistry(StatefulServiceContext context, IReliableStateManagerReplica stateManager)
-            : base(context, stateManager)
+        public UniverseRegistry(StatefulServiceContext context, IReliableStateManager stateManager)
+            : base(context, stateManager as IReliableStateManagerReplica)
         { }
 
         /// <summary>

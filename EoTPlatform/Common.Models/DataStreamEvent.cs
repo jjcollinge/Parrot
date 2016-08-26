@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 namespace Common.Models
 {
     [DataContract]
-    public class DataEvent
+    public class UniverseEvent
     {
         [DataMember]
-        public TimeSpan TimeOffset { get; set; }
+        public DateTime OriginalTimeStamp { get; set; }
         [DataMember]
         public string TargetId { get; set; }
         [DataMember]

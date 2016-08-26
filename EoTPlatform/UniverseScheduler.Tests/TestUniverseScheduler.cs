@@ -12,36 +12,8 @@ namespace UniverseScheduler.Tests
     public class TestLoadEventAsyncStream
     {
         [TestMethod]
-        public async Task TestLoadEventStreamAsyncSuccess()
-        {
-            var scheduler = new UniverseScheduler(null, new MockServiceProxyFactory(), new MockPlatformAbstraction());
-
-            string currentFolderPath = Environment.CurrentDirectory;
-            string projectFolderPath = currentFolderPath.Substring(0, currentFolderPath.IndexOf("bin"));
-            string universeEventStreamFilePath = $"{projectFolderPath}\\UniverseData.csv";
-
-            await scheduler.LoadEventStreamAsync(universeEventStreamFilePath);
-
-            Assert.IsTrue(scheduler.eventStream?.Count == 10);
-        }
-
-        [TestMethod]
-        public async Task TestLoadEventStreamAsyncFail()
-        {
-            var scheduler = new UniverseScheduler(null, new MockServiceProxyFactory(), new MockPlatformAbstraction());
-
-            string currentFolderPath = Environment.CurrentDirectory;
-            string projectFolderPath = currentFolderPath.Substring(0, currentFolderPath.IndexOf("bin"));
-            string universeEventStreamFilePath = $"{projectFolderPath}\\UniverseData.csv";
-
-            await scheduler.LoadEventStreamAsync(universeEventStreamFilePath);
-
-            Assert.IsFalse(scheduler.eventStream?.Count == 5);
-        }
-
-        [TestMethod]
         [ExpectedException(typeof(FileNotFoundException), "File does not exist at given file path.")]
-        public async Task TestLoadEventStreamAsyncWithIncorrectFilePath()
+        public async Task TestSetupAsyncWithInvalidFilePath()
         {
             var scheduler = new UniverseScheduler(null, new MockServiceProxyFactory(), new MockPlatformAbstraction());
 
@@ -49,53 +21,64 @@ namespace UniverseScheduler.Tests
             string projectFolderPath = currentFolderPath.Substring(0, currentFolderPath.IndexOf("bin"));
             string universeEventStreamFilePath = $"{projectFolderPath}\\UniverseDataFail.csv";
 
-            await scheduler.LoadEventStreamAsync(universeEventStreamFilePath);
-        }
+            UniverseDefinition universeDefinition = new UniverseDefinition();
 
-        [TestMethod]
-        [ExpectedException(typeof(NullReferenceException), "Null parameters provided.")]
-        public async Task TestLoadEventStreamAsyncWithNullFilePath()
-        {
-            var scheduler = new UniverseScheduler(null, new MockServiceProxyFactory(), new MockPlatformAbstraction());
-
-            await scheduler.LoadEventStreamAsync(null);
-        }
-
-        [TestMethod]
-        public async Task TestLoadUniverseDefinitionAsyncSuccess()
-        {
-            var scheduler = new UniverseScheduler(null, new MockServiceProxyFactory(), new MockPlatformAbstraction());
-
-            UniverseDefinition definition = new UniverseDefinition();
-            definition.AddServiceEndpoints("UniverseActorRegistryType", new List<string> { "localhost:80" });
-
-            await scheduler.LoadUniverseDefinitionAsync(definition);
-
-            Assert.IsTrue(scheduler.actorMap.ContainsKey("mock"));
-        }
-
-        [TestMethod]
-        public async Task TestLoadUniverseDefinitionAsyncFail()
-        {
-            var scheduler = new UniverseScheduler(null, new MockServiceProxyFactory(), new MockPlatformAbstraction());
-
-            UniverseDefinition definition = new UniverseDefinition();
-            definition.AddServiceEndpoints("UniverseActorRegistryType", new List<string> { "localhost:80" });
-
-            await scheduler.LoadUniverseDefinitionAsync(definition);
-
-            Assert.IsFalse(scheduler.actorMap.ContainsKey("badger"));
+            await scheduler.SetupAsync(universeEventStreamFilePath, universeDefinition);
         }
 
         [TestMethod]
         [ExpectedException(typeof(KeyNotFoundException), "Service keys incorrect for required endpoints")]
-        public async Task TestLoadUniverseDefinitionAsyncWithNoServiceEndpoints()
+        public async Task TestSetupAsyncWithUniverseDefinitionMissingEndpoints()
+        {
+            var scheduler = new UniverseScheduler(null, new MockServiceProxyFactory(), new MockPlatformAbstraction());
+
+            string currentFolderPath = Environment.CurrentDirectory;
+            string projectFolderPath = currentFolderPath.Substring(0, currentFolderPath.IndexOf("bin"));
+            string universeEventStreamFilePath = $"{projectFolderPath}\\UniverseData.csv";
+
+            UniverseDefinition universeDefinition = new UniverseDefinition();
+
+            await scheduler.SetupAsync(universeEventStreamFilePath, universeDefinition);
+        }
+
+        [TestMethod]
+        public async Task TestSetupAsyncSuccess()
+        {
+            var scheduler = new UniverseScheduler(null, new MockServiceProxyFactory(), new MockPlatformAbstraction());
+
+            string currentFolderPath = Environment.CurrentDirectory;
+            string projectFolderPath = currentFolderPath.Substring(0, currentFolderPath.IndexOf("bin"));
+            string universeEventStreamFilePath = $"{projectFolderPath}\\UniverseData.csv";
+
+            UniverseDefinition universeDefinition = new UniverseDefinition();
+            universeDefinition.AddServiceEndpoints("UniverseActorRegistryType", new List<string> { "localhost:80" });
+
+            await scheduler.SetupAsync(universeEventStreamFilePath, universeDefinition);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException), "Ensure the event stream has been loaded and the universe definition has been provided.")]
+        public async Task TestSetupAsyncWithNullEventStream()
         {
             var scheduler = new UniverseScheduler(null, new MockServiceProxyFactory(), new MockPlatformAbstraction());
 
             UniverseDefinition definition = new UniverseDefinition();
+            definition.AddServiceEndpoints("UniverseActorRegistryType", new List<string> { "localhost:80" });
 
-            await scheduler.LoadUniverseDefinitionAsync(definition);
+            await scheduler.SetupAsync(null, definition);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException), "Ensure the event stream has been loaded and the universe definition has been provided.")]
+        public async Task TestSetupAsyncWithNullUniverseDefinition()
+        {
+            var scheduler = new UniverseScheduler(null, new MockServiceProxyFactory(), new MockPlatformAbstraction());
+
+            string currentFolderPath = Environment.CurrentDirectory;
+            string projectFolderPath = currentFolderPath.Substring(0, currentFolderPath.IndexOf("bin"));
+            string universeEventStreamFilePath = $"{projectFolderPath}\\UniverseData.csv";
+
+            await scheduler.SetupAsync(universeEventStreamFilePath, null);
         }
 
         [TestMethod]
@@ -107,47 +90,12 @@ namespace UniverseScheduler.Tests
             string projectFolderPath = currentFolderPath.Substring(0, currentFolderPath.IndexOf("bin"));
             string universeEventStreamFilePath = $"{projectFolderPath}\\UniverseData.csv";
 
-            UniverseDefinition definition = new UniverseDefinition();
-            definition.AddServiceEndpoints("UniverseActorRegistryType", new List<string> { "localhost:80" });
+            UniverseDefinition universeDefinition = new UniverseDefinition();
+            universeDefinition.AddServiceEndpoints("UniverseActorRegistryType", new List<string> { "localhost:80" });
 
-            await scheduler.LoadEventStreamAsync(universeEventStreamFilePath);
-            await scheduler.LoadUniverseDefinitionAsync(definition);
+            await scheduler.SetupAsync(universeEventStreamFilePath, universeDefinition);
 
-            var success = await scheduler.StartAsync();
-
-            Assert.IsTrue(success);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException), "Ensure the event stream has been loaded and the universe definition has been provided.")]
-        public async Task TestStartAsyncWithoutLoadingEventStream()
-        {
-            var scheduler = new UniverseScheduler(null, new MockServiceProxyFactory(), new MockPlatformAbstraction());
-
-            string currentFolderPath = Environment.CurrentDirectory;
-            string projectFolderPath = currentFolderPath.Substring(0, currentFolderPath.IndexOf("bin"));
-            string universeEventStreamFilePath = $"{projectFolderPath}\\UniverseData.csv";
-
-            UniverseDefinition definition = new UniverseDefinition();
-            definition.AddServiceEndpoints("UniverseActorRegistryType", new List<string> { "localhost:80" });
-
-            await scheduler.LoadUniverseDefinitionAsync(definition);
-
-            var success = await scheduler.StartAsync();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException), "Ensure the event stream has been loaded and the universe definition has been provided.")]
-        public async Task TestStartAsyncWithoutLoadingUniverseDefinition()
-        {
-            var scheduler = new UniverseScheduler(null, new MockServiceProxyFactory(), new MockPlatformAbstraction());
-
-            UniverseDefinition definition = new UniverseDefinition();
-            definition.AddServiceEndpoints("UniverseActorRegistryType", new List<string> { "localhost:80" });
-
-            await scheduler.LoadUniverseDefinitionAsync(definition);
-
-            var success = await scheduler.StartAsync();
+            await scheduler.StartAsync();
         }
     }
 }

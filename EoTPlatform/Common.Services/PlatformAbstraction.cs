@@ -42,7 +42,7 @@ namespace Common.Services
                     var serviceDescriptor = new StatelessServiceDescription()
                     {
                         ApplicationName = new Uri(applicationName),
-                        InstanceCount = -1,
+                        InstanceCount = 1,
                         ServiceName = serviceAddress,
                         ServiceTypeName = serviceTypeName,
                         PartitionSchemeDescription = new SingletonPartitionSchemeDescription() //TODO: Parameterise and use better partition scheme

@@ -10,11 +10,8 @@ namespace Common
 {
     public interface IUniverseScheduler : IService
     {
-        Task LoadEventStreamAsync(string eventStreamFilePath);
-        Task LoadUniverseDefinitionAsync(UniverseDefinition universeDefinition);
-        Task<bool> StartAsync();
-        Task<bool> StopAsync();
-        Task<bool> PauseAsync();
-        Task<bool> UnpauseAsync();
+        Task SetupAsync(string eventStreamFilePath, UniverseDefinition universeDefinition);
+        Task StartAsync();
+        Task StopAsync();
     }
 }

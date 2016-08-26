@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using Common.Interfaces;
 using System.IO;
 using Microsoft.ServiceFabric.Actors;
+using System.Threading;
 
 namespace UniverseScheduler
 {
@@ -24,9 +25,10 @@ namespace UniverseScheduler
         // Private
         private IServiceProxyFactory factory;
         private IPlatformAbstraction platform;
+        private IDictionary<UniverseEvent, Timer> timers;
 
         // Public
-        public Queue<DataEvent> eventStream { get; private set; }
+        public Queue<UniverseEvent> eventStream { get; private set; }
         public IDictionary<string, ActorId> actorMap { get; private set; }
 
         public UniverseScheduler(StatelessServiceContext context, IServiceProxyFactory factory, IPlatformAbstraction platform)
@@ -34,59 +36,33 @@ namespace UniverseScheduler
         {
             this.factory = factory;
             this.platform = platform;
+            timers = new Dictionary<UniverseEvent, Timer>();
+            eventStream = new Queue<UniverseEvent>();
         }
 
         /// <summary>
-        /// Loads an event stream from file.
+        /// Initialise the event stream to replay.
         /// </summary>
         /// <param name="eventStreamFilePath"></param>
-        /// <returns></returns>
-        public async Task LoadEventStreamAsync(string eventStreamFilePath)
-        {
-            IList<CsvRow> rows = LoadCSVRowsFromCSVFile(eventStreamFilePath);
-            eventStream = ConvertCSVRowsToDataEventStream(rows);
-        }
-
-        /// <summary>
-        /// Loads data from universe services that is required.
-        /// </summary>
         /// <param name="universeDefinition"></param>
         /// <returns></returns>
-        public async Task LoadUniverseDefinitionAsync(UniverseDefinition universeDefinition)
+        public async Task SetupAsync(string eventStreamFilePath, UniverseDefinition universeDefinition)
         {
-            // Assumes desired endpoint is at index 0
-            var registryEndpoint = universeDefinition.ServiceEndpoints["UniverseActorRegistryType"][0];
-            var registry = factory.CreateUniverseActorRegistryServiceProxy(new Uri(registryEndpoint));
-
-            // TODO: Local caching with periodic refreshes - at present assumes fixed registry
-            actorMap = await registry.GetRegisteredActorsAsync();
-        }
-
-        /// <summary>
-        /// Pause event streaming.
-        /// </summary>
-        /// <returns></returns>
-        public Task<bool> PauseAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Unpause event streaming.
-        /// </summary>
-        /// <returns></returns>
-        public Task<bool> UnpauseAsync()
-        {
-            throw new NotImplementedException();
+            await SetupEventStreamAsync(eventStreamFilePath);
+            await SetupActorMap(universeDefinition);
         }
 
         /// <summary>
         /// Stop the universe event stream.
         /// </summary>
         /// <returns></returns>
-        public Task<bool> StopAsync()
+        public Task StopAsync()
         {
-            throw new NotImplementedException();
+            foreach(var timer in timers.Values)
+            {
+                timer.Change(Timeout.Infinite, Timeout.Infinite);
+            }
+            return Task.FromResult(true);
         }
 
         /// <summary>
@@ -95,32 +71,35 @@ namespace UniverseScheduler
         /// <param name="eventStreamFilePath"></param>
         /// <param name="universeDefinition"></param>
         /// <returns></returns>
-        public async Task<bool> StartAsync()
+        public Task StartAsync()
         {
-            if (eventStream == null || actorMap == null)
-                throw new InvalidOperationException("Ensure the event stream has been loaded and the universe definition has been provided.");
+            var startDelay = TimeSpan.FromMilliseconds(5000);
+            var baseTime = DateTime.MinValue;
 
-            var started = false;
+            timers.Clear();
 
-            // Stream events [Will be refactored heavily to reflect proper scheduler]
-            while (eventStream.Count > 0)
+            // Assume events are in ascending order
+            while(eventStream.Count > 0)
             {
-                // Take event of the queue to process
-                var ev = eventStream.Dequeue();
+                var evt = eventStream.Dequeue();
 
-                // Wait until the right time
-                await Task.Delay(ev.TimeOffset);
+                // Base time is the first event in the list
+                if (baseTime == DateTime.MinValue)
+                    baseTime = evt.OriginalTimeStamp;
 
-                // Sned event to appropriate actor (Batching?)
-                var actorId = actorMap[ev.TargetId];
-                var applicationName = await platform.GetServiceContextApplicationNameAsync();
-                var actor = await platform.CreateUniverseActorProxyAsync(actorId, new Uri($"{applicationName}/UniverseActorService"));
-                await actor.SendMessageAsync(ev.Payload);
+                TimeSpan timeDelta = evt.OriginalTimeStamp - baseTime + startDelay;
 
-                started = true;
+                if (timeDelta < TimeSpan.Zero)
+                {
+                    return Task.FromResult(true);
+                }
+                timers.Add(evt, new Timer(e =>
+                {
+                    DispatchEvent((UniverseEvent)e);
+                }, evt, timeDelta, Timeout.InfiniteTimeSpan));
             }
 
-            return started;
+            return Task.FromResult(true);
         }
 
         /// <summary>
@@ -128,32 +107,24 @@ namespace UniverseScheduler
         /// </summary>
         /// <param name="rows"></param>
         /// <returns></returns>
-        private Queue<DataEvent> ConvertCSVRowsToDataEventStream(IList<CsvRow> rows)
+        private void PopulateEventStream(IList<CsvRow> rows)
         {
             if (rows == null)
                 throw new NullReferenceException();
 
             // Assumes row is in format: [TimeStamp, Id, PropertyA, PropertyB...]
-
-            var events = new Queue<DataEvent>();
-
-            // Assume data is ordered
-            DateTime baseTime = DateTime.MinValue;
+            eventStream.Clear();
 
             for (int i = 0; i < rows.Count; i++)
             {
                 var row = rows[i];
 
                 // Parse time
-                var ev = new DataEvent();
+                var ev = new UniverseEvent();
                 var dateTimeStr = Regex.Replace(row[0].Trim(), "[^0-9/:]", " ");
                 var originalTime = DateTime.ParseExact(dateTimeStr, "dd/MM/yyyy HH:mm:ss", null);
 
-                if (baseTime == DateTime.MinValue)
-                    baseTime = originalTime;
-
-                var deltaTimeSpan = originalTime - baseTime;
-                ev.TimeOffset = deltaTimeSpan;
+                ev.OriginalTimeStamp = originalTime;
 
                 ev.TargetId = row[1];
 
@@ -165,9 +136,9 @@ namespace UniverseScheduler
 
                 // Remove trailing whitespace
                 ev.Payload.Trim();
-                events.Enqueue(ev);
+
+                eventStream.Enqueue(ev);
             }
-            return events;
         }
 
         /// <summary>
@@ -202,6 +173,45 @@ namespace UniverseScheduler
             }
 
             return rows;
+        }
+
+        /// <summary>
+        /// Loads an event stream from file.
+        /// </summary>
+        /// <param name="eventStreamFilePath"></param>
+        /// <returns></returns>
+        private async Task SetupEventStreamAsync(string eventStreamFilePath)
+        {
+            IList<CsvRow> rows = LoadCSVRowsFromCSVFile(eventStreamFilePath);
+            PopulateEventStream(rows);
+        }
+
+        /// <summary>
+        /// Loads data from universe services that is required.
+        /// </summary>
+        /// <param name="universeDefinition"></param>
+        /// <returns></returns>
+        private async Task SetupActorMap(UniverseDefinition universeDefinition)
+        {
+            // Assumes desired endpoint is at index 0
+            var registryEndpoint = universeDefinition.ServiceEndpoints["UniverseActorRegistryType"][0];
+            var registry = factory.CreateUniverseActorRegistryServiceProxy(new Uri(registryEndpoint));
+
+            // TODO: Local caching with periodic refreshes - at present assumes fixed registry
+            actorMap = await registry.GetRegisteredActorsAsync();
+        }
+
+        /// <summary>
+        /// Called to send an event to the appropriate actor
+        /// </summary>
+        /// <param name="evt"></param>
+        private async void DispatchEvent(UniverseEvent evt)
+        {
+            // Send event to appropriate actor
+            var actorId = actorMap[evt.TargetId];
+            var applicationName = await platform.GetServiceContextApplicationNameAsync();
+            var actor = await platform.CreateUniverseActorProxyAsync(actorId, new Uri($"{applicationName}/UniverseActorService"));
+            await actor.SendMessageAsync(evt.Payload);
         }
 
         /// <summary>

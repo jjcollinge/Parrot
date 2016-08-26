@@ -112,11 +112,9 @@ namespace UniverseBuilder
 
             await platform.BuildServiceAsync(applicationName, serviceUri, serviceType, ServiceContextTypes.Stateless);
 
-            // Start the event stream
+            // Setup the event stream
             var universeScheduler = proxyFactory.CreateUniverseScheduler(serviceUri);
-            await universeScheduler.LoadEventStreamAsync(eventStreamFilePath);
-            await universeScheduler.LoadUniverseDefinitionAsync(universeDefinition);
-            await universeScheduler.StartAsync();
+            await universeScheduler.SetupAsync(eventStreamFilePath, universeDefinition);
 
             universeDefinition.AddServiceEndpoints(serviceType, new List<string> { serviceAddress });
         }

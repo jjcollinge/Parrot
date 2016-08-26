@@ -10,34 +10,21 @@ namespace UniverseScheduler.Mocks
 {
     public class MockUniverseScheduler : IUniverseScheduler
     {
-        public Task LoadEventStreamAsync(string eventStreamFilePath)
+
+        public Task SetupAsync(string eventStreamFilePath, UniverseDefinition universeDefinition)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task StartAsync()
         {
             return Task.FromResult(true);
         }
 
-        public Task LoadUniverseDefinitionAsync(UniverseDefinition universeDefinition)
+        public Task StopAsync()
         {
             return Task.FromResult(true);
         }
 
-        public Task<bool> PauseAsync()
-        {
-            return Task.FromResult(true);
-        }
-
-        public Task<bool> StartAsync()
-        {
-            return Task.FromResult(true);
-        }
-
-        public Task<bool> StopAsync()
-        {
-            return Task.FromResult(true);
-        }
-
-        public Task<bool> UnpauseAsync()
-        {
-            return Task.FromResult(true);
-        }
     }
 }
