@@ -64,11 +64,11 @@ namespace UniverseBuilder
                 //TODO: Compile custom plugin assembly files
 
                 // Return description of all the universe services and metadata 
-                universeDefinition.Status = Status.Running;
+                universeDefinition.Status = UniverseStatus.Running;
             }
             else
             {
-                universeDefinition.Status = Status.Failed;
+                universeDefinition.Status = UniverseStatus.Failed;
             }
 
             return universeDefinition;

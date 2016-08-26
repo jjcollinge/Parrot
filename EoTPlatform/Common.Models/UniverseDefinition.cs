@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Common.Models
 {
-    public enum Status
+    public enum UniverseStatus
     {
         Building,
         Running,
@@ -21,14 +21,14 @@ namespace Common.Models
         {
             this.ServiceEndpoints = new Dictionary<string, List<string>>();
             this.Id = Guid.NewGuid().ToString();
-            this.Status = Status.Building;
+            this.Status = UniverseStatus.Building;
         }
 
         [DataMember]
         public string Id { get; set; }
 
         [DataMember]
-        public Status Status { get; set; }
+        public UniverseStatus Status { get; set; }
 
         [DataMember]
         public Dictionary<string, List<string>> ServiceEndpoints { get; private set; }

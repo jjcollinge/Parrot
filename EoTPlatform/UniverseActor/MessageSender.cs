@@ -10,11 +10,9 @@ namespace UniverseActor
     public class MessageSender
     {
         private ServiceClient client;
-        private string deviceId;
 
-        public MessageSender(string deviceId, string connStr)
+        public MessageSender(string connStr)
         {
-            this.deviceId = deviceId;
             this.client = ServiceClient.CreateFromConnectionString(connStr);
         }
 
@@ -23,7 +21,7 @@ namespace UniverseActor
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public async Task SendMessageAsync(byte[] msg)
+        public async Task SendMessageAsync(string deviceId, byte[] msg)
         {
             await client.SendAsync(deviceId, new Message(msg));
         }

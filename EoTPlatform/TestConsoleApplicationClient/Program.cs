@@ -5,7 +5,7 @@ using Microsoft.ServiceFabric.Services.Client;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using System;
 
-namespace TestConsoleApplicationClient
+namespace TestClient
 {
     class Program
     {

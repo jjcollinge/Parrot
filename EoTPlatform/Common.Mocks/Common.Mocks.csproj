@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MockAsyncEnumerable.cs" />
+    <Compile Include="MockCloudHub.cs" />
     <Compile Include="MockPlatformAbstraction.cs" />
     <Compile Include="MockReliableDictionary.cs" />
     <Compile Include="MockReliableQueue.cs" />

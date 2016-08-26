@@ -6,6 +6,7 @@ using Common.Models;
 using System.Text;
 using System.Collections.Generic;
 using Microsoft.ServiceFabric.Actors;
+using Common;
 
 namespace UniverseActor
 {
@@ -13,16 +14,16 @@ namespace UniverseActor
     public class UniverseActor : Actor, IUniverseActor
     {
         // Private
-        private MessageSender sender;
-        private MessageReceiver receiver;
-        private HubManager hub;
+        private ICloudConnector cloudConnector;
         private CommandService commands;
 
         // Public
         public ActorTemplate template { get; private set; }
 
-        public UniverseActor()
-        { }
+        public UniverseActor(ICloudConnector cloudConnector)
+        {
+            this.cloudConnector = cloudConnector;
+        }
 
         /// <summary>
         /// This method is called to send a message to the cloud hub.
@@ -31,7 +32,7 @@ namespace UniverseActor
         /// <returns></returns>
         public async Task SendMessageAsync(string msg)
         {
-            await sender.SendMessageAsync(Encoding.UTF8.GetBytes(msg));
+            await cloudConnector.SendMessageAsync(msg);
             ActorEventSource.Current.ActorMessage(this, $"Sent '{msg}' to the cloud.");
         }
 
@@ -41,7 +42,7 @@ namespace UniverseActor
         /// <returns></returns>
         public async Task ReceiveMessageAsync()
         {
-            var msg = await receiver.ReceiveMessageAsync();
+            var msg = await cloudConnector.ReceiveMessageAsync();
             ActorEventSource.Current.ActorMessage(this, $"Recieved '{msg}' from the cloud.");
 
             // Assumes message is just command name
@@ -75,7 +76,6 @@ namespace UniverseActor
             throw new NotImplementedException();
         }
 
-
         /// <summary>
         /// This method is called whenever an actor is activated.
         /// An actor is activated the first time any of its methods are invoked.
@@ -95,9 +95,9 @@ namespace UniverseActor
         {
             ActorEventSource.Current.ActorMessage(this, $"Deactivating actor with Id: '{Id}'");
 
-            // Deregister this actor from the Hub Manager's cloud connection
-            await hub?.DeregisterAsync();
-            hub = null;
+            // Deregister this actor from the cloud manager's connection
+            await cloudConnector?.DeregisterAsync();
+            cloudConnector = null;
         }
 
         /// <summary>
@@ -113,14 +113,9 @@ namespace UniverseActor
             this.template = template;
             commands = new CommandService(new List<string>(this.template.Commands));
 
-            // Initialise communication services
-            var cloudId = template.Id;
-            sender = new MessageSender(cloudId, "HostName=eotiothub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
-            receiver = new MessageReceiver(cloudId, "eotiothub.azure-devices.net", "iothubowner", "Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
-
-            // Create new Hub Manager and register this actor using the external template id with the cloud gateway.
-            hub = new HubManager("HostName=eotiothub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
-            await hub.RegisterAsync(cloudId);
+            // Create new cloud hub and register this actor using the external template id with the cloud gateway.
+            var deviceId = template.Id;
+            await cloudConnector.RegisterAsync(deviceId, "eotiothub.azure-devices.net", "iothubowner", "Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
         }
     }
 }

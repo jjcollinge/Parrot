@@ -62,6 +62,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ICloudConnector.cs" />
     <Compile Include="IPlatformAbstraction.cs" />
     <Compile Include="IServiceProxyFactory.cs" />
     <Compile Include="IUniverseActorRegistry.cs" />

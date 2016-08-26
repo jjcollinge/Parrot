@@ -33,7 +33,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Services", "Common.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniverseFactory", "UniverseFactory\UniverseFactory.csproj", "{80DA054B-BCB3-43AA-9B4D-F23ADF5ED6A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsoleApplicationClient", "TestConsoleApplicationClient\TestConsoleApplicationClient.csproj", "{ACBA43F2-B552-4F28-B97A-5FF515764C88}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestClient", "TestConsoleApplicationClient\TestClient.csproj", "{ACBA43F2-B552-4F28-B97A-5FF515764C88}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniverseWebApi", "UniverseWebApi\UniverseWebApi.csproj", "{41D92D07-D3E0-4892-86B2-7DDC4C5E3491}"
 EndProject

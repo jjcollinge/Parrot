@@ -12,7 +12,13 @@ namespace UniverseBuilder.Mocks
     {
         public async Task<UniverseDefinition> BuildUniverseAsync(string eventStreamFilePath, UniverseTemplate template)
         {
-            return new UniverseDefinition();
+            var def = new UniverseDefinition()
+            {
+                Id = template.Id,
+                Status = UniverseStatus.Running
+            };
+            def.AddServiceEndpoints("mock", new List<string> { "localhost:8080" });
+            return def;
         }
     }
 }

@@ -1,0 +1,33 @@
+{
+    "id": "universe123124",
+    "version": "0.1",
+    "actorTemplates": [
+        {
+            "id": "ABC123",
+            "metadata": {
+                "country": "UK",
+                "route": "R12",
+                "section": "S22",
+                "mdu": "mdu33"
+            },
+            "properties": {
+                "x": {
+                    "value": "3",
+                    "type": "int",
+                    "unit": "m"
+                },
+                "y": {
+                    "value": "9.2",
+                    "type": "double",
+                    "unit": "mph"
+                }
+            },
+            "commands": [
+                "restart",
+                "enable",
+                "disable",
+                "MoveForward"
+            ]
+        }
+    ]
+}

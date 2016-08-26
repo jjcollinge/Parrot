@@ -85,10 +85,22 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="TestActorIoTHubCommunication.cs" />
+    <Compile Include="TestUniverseActor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common.Mocks\Common.Mocks.csproj">
+      <Project>{3CCE72BC-E363-4DB6-B963-B39D2140BCDF}</Project>
+      <Name>Common.Mocks</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Models\Common.Models.csproj">
+      <Project>{F85CFF0C-E291-4ABB-BB47-32CCB052AD0A}</Project>
+      <Name>Common.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.Interfaces.csproj">
+      <Project>{0ce24254-3fd9-40f7-bf15-f4b159e029c7}</Project>
+      <Name>Common.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UniverseActor\UniverseActor.csproj">
       <Project>{716ffc30-e3f2-4968-920a-4ffda37340db}</Project>
       <Name>UniverseActor</Name>

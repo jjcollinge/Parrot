@@ -11,11 +11,9 @@ namespace UniverseActor
     public class MessageReceiver
     {
         private DeviceClient client;
-        private string deviceId;
 
         public MessageReceiver(string deviceId, string hostname, string policyName, string deviceKey)
         {
-            this.deviceId = deviceId;
             this.client = DeviceClient.Create(hostname, new DeviceAuthenticationWithSharedAccessPolicyKey(deviceId, policyName, deviceKey));
         }
 
@@ -23,19 +21,12 @@ namespace UniverseActor
         /// Receive a message from the cloud and parse it into a string.
         /// </summary>
         /// <returns></returns>
-        public async Task<string> ReceiveMessageAsync()
+        public async Task<Message> ReceiveMessageAsync()
         {
             var message = await client.ReceiveAsync();
-            ActorEventSource.Current.Message($"Recieved message {message}");
             await client.CompleteAsync(message);
 
-            string body = "";
-            using(var reader = new StreamReader(message.BodyStream))
-            {
-                body = await reader.ReadToEndAsync();
-            }
-
-            return body;
+            return message;
         }
     }
 }

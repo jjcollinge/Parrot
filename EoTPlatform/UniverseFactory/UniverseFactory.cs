@@ -42,15 +42,16 @@ namespace UniverseFactory
             // Build universe
             var universeBuilderAddress = new Uri("fabric:/EoTPlatform/UniverseBuilder");
             var universeBuilder = serviceFactory.CreateUniverseBuilderServiceProxy(universeBuilderAddress);
-            var universeDescriptor = await universeBuilder.BuildUniverseAsync(specification.UniverseEventStreamFilePath, universeTemplate);
+            // TODO: Consider loading event stream here too - or loading both the template and eventstream late
+            var universeDefinition = await universeBuilder.BuildUniverseAsync(specification.UniverseEventStreamFilePath, universeTemplate);
 
             // Register the universe
             var universeRegistryAddress = new Uri("fabric:/EoTPlatform/UniverseRegistry");
             var universeRegistry = serviceFactory.CreateUniverseRegistryServiceProxy(universeRegistryAddress);
-            await universeRegistry.RegisterUniverseAsync(universeDescriptor);
+            await universeRegistry.RegisterUniverseAsync(universeDefinition);
 
             // Return descriptor
-            return universeDescriptor;
+            return universeDefinition;
         }
 
         /// <summary>

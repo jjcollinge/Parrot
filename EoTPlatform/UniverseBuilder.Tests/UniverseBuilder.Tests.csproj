@@ -97,7 +97,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="TestUniverseBuilderUsingUniverseTemplate.cs" />
+    <Compile Include="TestUniverseBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -7,10 +7,10 @@ using Common.Mocks;
 namespace UniverseBuilder.Tests
 {
     [TestClass]
-    public class TestUniverseBuilderUsingUniverseTemplate
+    public class TestUniverseBuilder
     {
         [TestMethod]
-        public async Task TestBuildingUniverseFromUniverseTemplate()
+        public async Task TestBuildUniverseAsync()
         {
             var universeTemplate = new UniverseTemplate();
             universeTemplate.Id = "0";

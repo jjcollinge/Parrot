@@ -27,7 +27,7 @@ namespace UniverseScheduler.Mocks
 
         public Task<bool> StartAsync()
         {
-            throw new NotImplementedException();
+            return Task.FromResult(true);
         }
 
         public Task<bool> StopAsync()

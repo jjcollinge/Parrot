@@ -17,7 +17,7 @@ namespace UniverseRegistry.Tests
 
             UniverseDefinition definition = new UniverseDefinition();
             definition.Id = "mock";
-            definition.Status = Status.Running;
+            definition.Status = UniverseStatus.Running;
             definition.ServiceEndpoints.Add("mock", new List<string> { "localhost:8080" });
 
             await registry.RegisterUniverseAsync(definition);
@@ -35,7 +35,7 @@ namespace UniverseRegistry.Tests
 
             UniverseDefinition definition = new UniverseDefinition();
             definition.Id = "mock";
-            definition.Status = Status.Running;
+            definition.Status = UniverseStatus.Running;
             definition.ServiceEndpoints.Add("mock", new List<string> { "localhost:8080" });
 
             await registry.RegisterUniverseAsync(definition);
