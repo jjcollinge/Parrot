@@ -17,8 +17,7 @@ namespace UniverseActor.Interfaces
         Task RestartAsync();
         Task DisableAsync();
         Task EnableAsync();
-        Task ReceiveMessageAsync();
-        Task SendMessageAsync(string msg);
+        Task ProcessEventAsync(UniverseEvent evt);
         //TODO: Needs DI
         Task SetupAsync(ActorTemplate template);
     }

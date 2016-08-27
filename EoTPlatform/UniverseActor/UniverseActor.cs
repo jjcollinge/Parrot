@@ -7,6 +7,7 @@ using System.Text;
 using System.Collections.Generic;
 using Microsoft.ServiceFabric.Actors;
 using Common;
+using Newtonsoft.Json;
 
 namespace UniverseActor
 {
@@ -26,27 +27,23 @@ namespace UniverseActor
         }
 
         /// <summary>
-        /// This method is called to send a message to the cloud hub.
+        /// Process a new universe event.
         /// </summary>
-        /// <param name="msg"></param>
+        /// <param name="evt"></param>
         /// <returns></returns>
-        public async Task SendMessageAsync(string msg)
+        public async Task ProcessEventAsync(UniverseEvent evt)
         {
-            await cloudConnector.SendMessageAsync(msg);
-            ActorEventSource.Current.ActorMessage(this, $"Sent '{msg}' to the cloud.");
-        }
-
-        /// <summary>
-        /// This method is called when the actor recieves a message.
-        /// </summary>
-        /// <returns></returns>
-        public async Task ReceiveMessageAsync()
-        {
-            var msg = await cloudConnector.ReceiveMessageAsync();
-            ActorEventSource.Current.ActorMessage(this, $"Recieved '{msg}' from the cloud.");
-
-            // Assumes message is just command name
-            await commands.InvokeAsync(msg);
+            // Apply transformations
+            var transformation = this.template.Transformations[evt.Payload.Key];
+            var value = Convert.ToDouble(evt.Payload.Value) * transformation;
+            var newEvt = new UniverseEvent()
+            {
+                ActorId = evt.ActorId,
+                OriginalTimeStamp = evt.OriginalTimeStamp,
+                Payload = new KeyValuePair<string, string>(evt.Payload.Key, value.ToString())
+            };
+            var json = JsonConvert.SerializeObject(newEvt);
+            await SendMessageAsync(json);
         }
 
         /// <summary>
@@ -77,6 +74,48 @@ namespace UniverseActor
         }
 
         /// <summary>
+        /// This method is called to bootstrap any post creation intialisation that may be required.
+        /// </summary>
+        /// <param name="template"></param>
+        /// <returns></returns>
+        public async Task SetupAsync(ActorTemplate template)
+        {
+            ActorEventSource.Current.ActorMessage(this, $"Setting up actor with Id: '{Id}'");
+
+            // Store the template which describes this actors profile
+            this.template = template;
+            commands = new CommandService(new List<string>(this.template.Commands));
+
+            // Create new cloud hub and register this actor using the external template id with the cloud gateway.
+            var deviceId = template.Id;
+            await cloudConnector.RegisterAsync(deviceId, "eotiothub.azure-devices.net", "iothubowner", "Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
+        }
+
+        /// <summary>
+        /// This method is called to send a message to the cloud hub.
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        private async Task SendMessageAsync(string msg)
+        {
+            await cloudConnector.SendMessageAsync(msg);
+            ActorEventSource.Current.ActorMessage(this, $"Sent '{msg}' to the cloud.");
+        }
+
+        /// <summary>
+        /// This method is called when the actor recieves a message.
+        /// </summary>
+        /// <returns></returns>
+        private async Task ReceiveMessageAsync()
+        {
+            var msg = await cloudConnector.ReceiveMessageAsync();
+            ActorEventSource.Current.ActorMessage(this, $"Recieved '{msg}' from the cloud.");
+
+            // Assumes message is just command name
+            await commands.InvokeAsync(msg);
+        }
+
+        /// <summary>
         /// This method is called whenever an actor is activated.
         /// An actor is activated the first time any of its methods are invoked.
         /// </summary>
@@ -98,24 +137,6 @@ namespace UniverseActor
             // Deregister this actor from the cloud manager's connection
             await cloudConnector?.DeregisterAsync();
             cloudConnector = null;
-        }
-
-        /// <summary>
-        /// This method is called to bootstrap any post creation intialisation that may be required.
-        /// </summary>
-        /// <param name="template"></param>
-        /// <returns></returns>
-        public async Task SetupAsync(ActorTemplate template)
-        {
-            ActorEventSource.Current.ActorMessage(this, $"Setting up actor with Id: '{Id}'");
-
-            // Store the template which describes this actors profile
-            this.template = template;
-            commands = new CommandService(new List<string>(this.template.Commands));
-
-            // Create new cloud hub and register this actor using the external template id with the cloud gateway.
-            var deviceId = template.Id;
-            await cloudConnector.RegisterAsync(deviceId, "eotiothub.azure-devices.net", "iothubowner", "Q156BMJEwL2Eg7vr/dMoa7hXmOB/b/rrEri6rHFJvaM=");
         }
     }
 }

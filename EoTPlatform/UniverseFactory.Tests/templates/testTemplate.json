@@ -10,17 +10,9 @@
                 "section": "S22",
                 "mdu": "mdu33"
             },
-            "properties": {
-                "x": {
-                    "value": "3",
-                    "type": "int",
-                    "unit": "m"
-                },
-                "y": {
-                    "value": "9.2",
-                    "type": "double",
-                    "unit": "mph"
-                }
+            "transformations": {
+                "x": "3.2",
+                "y": "9.2"
             },
             "commands": [
                 "restart",

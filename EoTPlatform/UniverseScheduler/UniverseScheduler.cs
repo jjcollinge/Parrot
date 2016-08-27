@@ -126,7 +126,7 @@ namespace UniverseScheduler
 
                 ev.OriginalTimeStamp = originalTime;
 
-                ev.TargetId = row[1];
+                ev.ActorId = row[1];
 
                 // Parse payload
                 for (int j = 2; j < row.Count; j++)
@@ -208,10 +208,10 @@ namespace UniverseScheduler
         private async void DispatchEvent(UniverseEvent evt)
         {
             // Send event to appropriate actor
-            var actorId = actorMap[evt.TargetId];
+            var actorId = actorMap[evt.ActorId];
             var applicationName = await platform.GetServiceContextApplicationNameAsync();
             var actor = await platform.CreateUniverseActorProxyAsync(actorId, new Uri($"{applicationName}/UniverseActorService"));
-            await actor.SendMessageAsync(evt.Payload);
+            await actor.ProcessEventAsync(evt);
         }
 
         /// <summary>

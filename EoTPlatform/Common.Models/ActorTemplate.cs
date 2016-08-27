@@ -7,18 +7,6 @@ using System.Threading.Tasks;
 
 namespace Common.Models
 {
-    /**
-     * Needs to
-     *  - support 2 types of assests.
-     *       1. Static i.e. Point
-     *       2. Dynamic i.e. Train
-     * 
-     * Model connections between assets
-     * Be extensible
-     * Map the domain in a simple format
-     * Have versions
-     **/
-
     [DataContract]
     public class ActorTemplate
     {
@@ -26,7 +14,7 @@ namespace Common.Models
         {
             this.Id = id;
             Metadata = new Dictionary<string, string>();
-            Properties = new Dictionary<string, ActorTemplateProperty>();
+            Transformations = new Dictionary<string, double>();
             Commands = new List<string>();
         }
 
@@ -37,7 +25,7 @@ namespace Common.Models
         public IDictionary<string, string> Metadata { get; set; }
 
         [DataMember]
-        public IDictionary<string, ActorTemplateProperty> Properties { get; set; }
+        public IDictionary<string, double> Transformations { get; set; }
 
         [DataMember]
         public IList<string> Commands { get; set; }

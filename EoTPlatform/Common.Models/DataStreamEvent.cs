@@ -13,8 +13,8 @@ namespace Common.Models
         [DataMember]
         public DateTime OriginalTimeStamp { get; set; }
         [DataMember]
-        public string TargetId { get; set; }
+        public string ActorId { get; set; }
         [DataMember]
-        public string Payload { get; set; }
+        public KeyValuePair<string, double> Payload { get; set; }
     }
 }
