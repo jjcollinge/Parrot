@@ -4,7 +4,7 @@ The platform extends a simple replay engine by allowing user interactions which 
 
 The following flow depicts the movement of data through the system.
 
-[Generate/Read Data] --> [Scheduler] --> [Transform] --> [Execute]
+[Generate/Read Data] --> [Schedule] --> [Transform] --> [Execute]
 
 ---
 
