@@ -122,10 +122,10 @@ namespace UniverseBuilder
         /// <summary>
         /// Create a registry to map external Ids to internal actor Ids.
         /// </summary>
-        /// <param name="actorIds"></param>
+        /// <param name="actorIdMaps"></param>
         /// <param name="universeDefinition"></param>
         /// <returns></returns>
-        private async Task CreateUniverseActorRegistryAsync(IDictionary<string, ActorId> actorIds, UniverseDefinition universeDefinition)
+        private async Task CreateUniverseActorRegistryAsync(IDictionary<string, ActorId> actorIdMaps, UniverseDefinition universeDefinition)
         {
             // Create a new registry service
             var serviceBaseName = "UniverseActorRegistry";
@@ -137,7 +137,12 @@ namespace UniverseBuilder
 
             // Store each actor in the universes id in the registry
             var universeActorRegistry = proxyFactory.CreateUniverseActorRegistryServiceProxy(serviceUri);
-            await universeActorRegistry.RegisterUniverseActorsAsync(actorIds);
+
+            // TODO: Could batch
+            foreach(var actorIdMap in actorIdMaps)
+            {
+                await universeActorRegistry.RegisterUniverseActorAsync(actorIdMap.Key, actorIdMap.Value);
+            }
 
             universeDefinition.AddServiceEndpoints(serviceType, new List<string> { serviceAddress });
         }

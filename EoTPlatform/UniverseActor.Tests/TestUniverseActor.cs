@@ -11,7 +11,7 @@ namespace UniverseActor.Tests
     public class TestUniverseActor
     {
         [TestMethod]
-        public async Task TestSetupAsyncSuccess()
+        public async Task Test_Setup()
         {
             var actor = new UniverseActor(new MockCloudConnector());
 
@@ -26,7 +26,7 @@ namespace UniverseActor.Tests
         }
 
         [TestMethod]
-        public async Task TestProcessEventAsync()
+        public async Task Test_Process_Event()
         {
             var actor = new UniverseActor(new MockCloudConnector());
 

@@ -26,18 +26,19 @@ namespace UniverseScheduler
         private IServiceProxyFactory factory;
         private IPlatformAbstraction platform;
         private IDictionary<UniverseEvent, Timer> timers;
+        private IEventStreamFileLoader fileLoader;
 
         // Public
         public Queue<UniverseEvent> eventStream { get; private set; }
         public IDictionary<string, ActorId> actorMap { get; private set; }
 
-        public UniverseScheduler(StatelessServiceContext context, IServiceProxyFactory factory, IPlatformAbstraction platform)
+        public UniverseScheduler(StatelessServiceContext context, IServiceProxyFactory factory, IPlatformAbstraction platform, IEventStreamFileLoader eventStreamFileLoader)
             : base(context)
         {
             this.factory = factory;
             this.platform = platform;
             timers = new Dictionary<UniverseEvent, Timer>();
-            eventStream = new Queue<UniverseEvent>();
+            fileLoader = eventStreamFileLoader;
         }
 
         /// <summary>
@@ -103,87 +104,13 @@ namespace UniverseScheduler
         }
 
         /// <summary>
-        /// Parse the CSV rows and generate an event stream.
-        /// </summary>
-        /// <param name="rows"></param>
-        /// <returns></returns>
-        private void PopulateEventStream(IList<CsvRow> rows)
-        {
-            if (rows == null)
-                throw new NullReferenceException();
-
-            // Assumes row is in format: [TimeStamp, Id, PropertyA, PropertyB...]
-            eventStream.Clear();
-
-            for (int i = 0; i < rows.Count; i++)
-            {
-                var row = rows[i];
-
-                // Parse time
-                var ev = new UniverseEvent();
-                var dateTimeStr = Regex.Replace(row[0].Trim(), "[^0-9/:]", " ");
-                var originalTime = DateTime.ParseExact(dateTimeStr, "dd/MM/yyyy HH:mm:ss", null);
-
-                ev.OriginalTimeStamp = originalTime;
-
-                ev.ActorId = row[1];
-
-                // Parse payload
-                for (int j = 2; j < row.Count; j++)
-                {
-                    ev.Payload += row[j] + " ";
-                }
-
-                // Remove trailing whitespace
-                ev.Payload.Trim();
-
-                eventStream.Enqueue(ev);
-            }
-        }
-
-        /// <summary>
-        /// Load an in memory representation of data in a CSV file.
-        /// </summary>
-        /// <param name="eventStreamFilePath"></param>
-        /// <returns></returns>
-        private IList<CsvRow> LoadCSVRowsFromCSVFile(string eventStreamFilePath)
-        {
-            if (eventStreamFilePath == null)
-                throw new NullReferenceException();
-
-            IList<CsvRow> rows = new List<CsvRow>();
-
-            try
-            {
-                // Read file into memory
-                using (var reader = new CsvFileReader(eventStreamFilePath))
-                {
-                    CsvRow row = new CsvRow();
-                    while (reader.ReadRow(row))
-                    {
-                        ServiceEventSource.Current.ServiceMessage(this, $"Read CSV row '{row}'");
-                        rows.Add(row);
-                    }
-                }
-            }
-            catch (IOException ex)
-            {
-                ServiceEventSource.Current.ServiceMessage(this, $"Failed to read CSV file at path '{eventStreamFilePath}' with exception '{ex}'");
-                throw ex;
-            }
-
-            return rows;
-        }
-
-        /// <summary>
         /// Loads an event stream from file.
         /// </summary>
         /// <param name="eventStreamFilePath"></param>
         /// <returns></returns>
         private async Task SetupEventStreamAsync(string eventStreamFilePath)
         {
-            IList<CsvRow> rows = LoadCSVRowsFromCSVFile(eventStreamFilePath);
-            PopulateEventStream(rows);
+            eventStream = fileLoader.ReadEventStreamFromFile(eventStreamFilePath);
         }
 
         /// <summary>
@@ -198,7 +125,7 @@ namespace UniverseScheduler
             var registry = factory.CreateUniverseActorRegistryServiceProxy(new Uri(registryEndpoint));
 
             // TODO: Local caching with periodic refreshes - at present assumes fixed registry
-            actorMap = await registry.GetRegisteredActorsAsync();
+            actorMap = await registry.GetAllRegisteredUniverseActorsAsync();
         }
 
         /// <summary>

@@ -10,22 +10,23 @@ namespace UniverseRegistry.Mocks
 {
     public class MockUniverseRegistry : IUniverseRegistry
     {
-        public Task DeregisterUniverseAsync(string id)
+        public Task<bool> DeregisterUniverseAsync(string id)
         {
             return Task.FromResult(true);
         }
 
-        public Task<UniverseDefinition> GetUniverseAsync(string universeId)
+        public Task<KeyValuePair<string, UniverseDefinition>> GetUniverseAsync(string universeId)
         {
-            return Task.FromResult(new UniverseDefinition());
+            return Task.FromResult(new KeyValuePair<string, UniverseDefinition>("0", new UniverseDefinition()));
         }
 
-        public Task<Dictionary<string, UniverseDefinition>> GetUniversesAsync()
+        public async Task<IDictionary<string, UniverseDefinition>> GetAllUniverseAsync()
         {
-            return Task.FromResult(new Dictionary<string, UniverseDefinition>());
+            var universe = new Dictionary<string, UniverseDefinition>();
+            return universe;
         }
 
-        public Task RegisterUniverseAsync(UniverseDefinition universe)
+        public Task<bool> RegisterUniverseAsync(string id, UniverseDefinition universe)
         {
             return Task.FromResult(true);
         }

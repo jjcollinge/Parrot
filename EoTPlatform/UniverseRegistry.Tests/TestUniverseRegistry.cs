@@ -4,46 +4,54 @@ using Common.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Common.Mocks;
+using Microsoft.ServiceFabric.Data;
+using System.Fabric;
 
 namespace UniverseRegistry.Tests
 {
     [TestClass]
     public class TestUniverseRegistry
     {
-        [TestMethod]
-        public async Task TestRegisterUniverseAsync()
+        private UniverseRegistry registry;
+        private UniverseDefinition definition;
+
+        public TestUniverseRegistry()
         {
-            var registry = new UniverseRegistry(null, new MockReliableStateManager());
-
-            UniverseDefinition definition = new UniverseDefinition();
-            definition.Id = "mock";
-            definition.Status = UniverseStatus.Running;
-            definition.ServiceEndpoints.Add("mock", new List<string> { "localhost:8080" });
-
-            await registry.RegisterUniverseAsync(definition);
-
-            var universe = await registry.GetUniverseAsync(definition.Id);
-
-            Assert.IsTrue(definition.Status == universe.Status);
-            Assert.IsTrue(definition.ServiceEndpoints == universe.ServiceEndpoints);
+            var context = this.CreateServiceContext();
+            this.registry = new UniverseRegistry(context, new ReliableStateManager(context));
+            this.definition = new UniverseDefinition();
+            this.definition.Id = "mock";
+            this.definition.Status = UniverseStatus.Running;
+            this.definition.ServiceEndpoints.Add("mock", new List<string> { "localhost:8080" });
         }
 
         [TestMethod]
-        public async Task TestDeregisterUniverseAsync()
+        public async Task Test_Register_Universe()
         {
-            var registry = new UniverseRegistry(null, new MockReliableStateManager());
+            // Will throw due to null context
+            var hasRegisteredUniverse = await registry.RegisterUniverseAsync(definition.Id, definition);
+            Assert.IsTrue(hasRegisteredUniverse);
+        }
 
-            UniverseDefinition definition = new UniverseDefinition();
-            definition.Id = "mock";
-            definition.Status = UniverseStatus.Running;
-            definition.ServiceEndpoints.Add("mock", new List<string> { "localhost:8080" });
+        [TestMethod]
+        public async Task Test_Deregister_Universe()
+        {
+            // Will throw due to null context
+            var hasDeregisteredUniverse = await registry.DeregisterUniverseAsync(definition.Id);
+            Assert.IsTrue(hasDeregisteredUniverse);
+        }
 
-            await registry.RegisterUniverseAsync(definition);
-            await registry.DeregisterUniverseAsync(definition.Id);
-
-            var universes = await registry.GetUniversesAsync();
-
-            Assert.IsTrue(universes.Count == 0);
+        [Ignore]
+        private StatefulServiceContext CreateServiceContext()
+        {
+            return new StatefulServiceContext(
+                new NodeContext(String.Empty, new NodeId(0, 0), 0, String.Empty, String.Empty),
+                new MockCodePackageActivationContext(),
+                String.Empty,
+                new Uri("fabric:/Mock"),
+                null,
+                Guid.NewGuid(),
+                0);
         }
     }
 }

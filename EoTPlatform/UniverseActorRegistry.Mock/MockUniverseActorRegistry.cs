@@ -11,34 +11,34 @@ namespace UniverseActorRegistry.Mocks
 {
     public class MockUniverseActorRegistry : IUniverseActorRegistry
     {
-        public Task DeregisterAllUniverseActorsAsync()
+        public Task ClearAll()
         {
             return Task.FromResult(true);
         }
 
-        public Task DeregisterUniverseActorAsync(string actorId)
+        public Task<bool> DeregisterUniverseActorAsync(string id)
         {
             return Task.FromResult(true);
         }
 
-        public Task<KeyValuePair<string, ActorId>> GetRegisteredActorAsync(string actorIdAsString)
+        public Task<KeyValuePair<string, ActorId>> GetRegisteredUniverseActorAsync(string id)
         {
             return Task.FromResult(new KeyValuePair<string, ActorId>());
         }
 
-        public async Task<IDictionary<string, ActorId>> GetRegisteredActorsAsync()
+        public async Task<IDictionary<string, ActorId>> GetAllRegisteredUniverseActorsAsync()
         {
             return new Dictionary<string, ActorId>{
                 { "MOCK", ActorId.CreateRandom() }
             };
         }
 
-        public Task RegisterUniverseActorAsync(string actorIdAsString, ActorId actorId)
+        public Task<bool> RegisterUniverseActorAsync(string id, ActorId actorId)
         {
             return Task.FromResult(true);
         }
 
-        public Task RegisterUniverseActorsAsync(IDictionary<string, ActorId> actorIds)
+        public Task ClearAllAsync<ActorId>()
         {
             return Task.FromResult(true);
         }

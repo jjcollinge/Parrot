@@ -20,6 +20,11 @@ namespace UniverseActor.Mocks
             return Task.FromResult(true);
         }
 
+        public Task ProcessEventAsync(UniverseEvent evt)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task ReceiveMessageAsync()
         {
             return Task.FromResult(true);

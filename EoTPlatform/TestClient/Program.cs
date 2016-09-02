@@ -31,7 +31,7 @@ namespace TestClient
             var universeRegistryAddress = new Uri("fabric:/EoTPlatform/UniverseRegistry");
             var universeRegistry = ServiceProxy.Create<IUniverseRegistry>(universeRegistryAddress, new ServicePartitionKey(1L));
 
-            var universes = universeRegistry.GetUniversesAsync().GetAwaiter().GetResult();
+            var universes = universeRegistry.GetAllUniverseAsync().GetAwaiter().GetResult();
 
             foreach(var universe in universes)
             {

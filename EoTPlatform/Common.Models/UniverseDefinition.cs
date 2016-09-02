@@ -28,7 +28,7 @@ namespace Common.Models
         public string Id { get; set; }
 
         [DataMember]
-        public UniverseStatus Status { get; set; }
+        public UniverseStatus Status { get; set; }        
 
         [DataMember]
         public Dictionary<string, List<string>> ServiceEndpoints { get; private set; }

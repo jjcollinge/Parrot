@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Runtime;
+using Common.Services;
+using Microsoft.ServiceFabric.Data;
 
 namespace UniverseActorRegistry
 {
@@ -19,9 +21,10 @@ namespace UniverseActorRegistry
                 // Registering a service maps a service type name to a .NET type.
                 // When Service Fabric creates an instance of this service type,
                 // an instance of the class is created in this host process.
+                var stateManager = new ReliableStateManager(null);
 
                 ServiceRuntime.RegisterServiceAsync("UniverseActorRegistryType",
-                    context => new UniverseActorRegistry(context)).GetAwaiter().GetResult();
+                    context => new UniverseActorRegistry(context, stateManager)).GetAwaiter().GetResult();
 
                 ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(UniverseActorRegistry).Name);
 

@@ -11,7 +11,7 @@ namespace UniverseWebApi.Services
     {
         Task CreateUniverseAsync(string universeTemplateFilePath);
         Task PauseUniverseAsync(string universeId);
-        Task<Dictionary<string, UniverseDefinition>> GetUniverseDescriptorsAsync();
+        Task<IDictionary<string, UniverseDefinition>> GetUniverseDescriptorsAsync();
         Task<UniverseDefinition> GetUniverseDescriptorAsync(string universeId);
         Task DeleteUniverseAsync(string universeId);
         Task DeleteAllUniversesAsync();

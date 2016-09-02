@@ -4,8 +4,8 @@ using UniverseRegistry.Mocks;
 using UniverseBuilder.Mocks;
 using UniverseTemplateLoader.Mocks;
 using UniverseActorRegistry.Mocks;
-using UniverseFactory.Mocks;
 using UniverseScheduler.Mocks;
+using UniverseFactory.Mocks;
 
 namespace Common.Mocks
 {

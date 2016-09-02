@@ -32,7 +32,7 @@ namespace UniverseWebApi.Services
         {
             // Delete all support services
             var registry = proxyFactory.CreateUniverseRegistryServiceProxy(new Uri("fabric:/EoTPlatform/UniverseRegistry"));
-            var univereses = await registry.GetUniversesAsync();
+            var univereses = await registry.GetAllUniverseAsync();
             foreach(var universe in univereses.Values)
             {
                 foreach(var endpoint in universe.ServiceEndpoints)
@@ -47,7 +47,8 @@ namespace UniverseWebApi.Services
             // Delete any support services
             var registry = proxyFactory.CreateUniverseRegistryServiceProxy(new Uri("fabric:/EoTPlatform/UniverseRegistry"));
             var universe = await registry.GetUniverseAsync(universeId);
-            foreach(var endpoint in universe.ServiceEndpoints)
+            var universeServiceEndpoints = universe.Value.ServiceEndpoints;
+            foreach(var endpoint in universeServiceEndpoints)
             {
                 // Delete service
             }
@@ -60,13 +61,13 @@ namespace UniverseWebApi.Services
         {
             var registry = proxyFactory.CreateUniverseRegistryServiceProxy(new Uri("fabric:/EoTPlatform/UniverseRegistry"));
             var universe = await registry.GetUniverseAsync(universeId);
-            return universe;
+            return universe.Value;
         }
 
-        public async Task<Dictionary<string, UniverseDefinition>> GetUniverseDescriptorsAsync()
+        public async Task<IDictionary<string, UniverseDefinition>> GetUniverseDescriptorsAsync()
         {
             var registry = proxyFactory.CreateUniverseRegistryServiceProxy(new Uri("fabric:/EoTPlatform/UniverseRegistry"));
-            var universes = await registry.GetUniversesAsync();
+            var universes = await registry.GetAllUniverseAsync();
             return universes;
         }
 

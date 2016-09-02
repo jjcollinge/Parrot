@@ -9,11 +9,11 @@ using System.Collections.Generic;
 namespace UniverseScheduler.Tests
 {
     [TestClass]
-    public class TestLoadEventAsyncStream
+    public class TestUniverseScheduler
     {
         [TestMethod]
         [ExpectedException(typeof(FileNotFoundException), "File does not exist at given file path.")]
-        public async Task TestSetupAsyncWithInvalidFilePath()
+        public async Task Test_Setup_With_Non_Existent_File()
         {
             var scheduler = new UniverseScheduler(null, new MockServiceProxyFactory(), new MockPlatformAbstraction());
 
@@ -28,7 +28,7 @@ namespace UniverseScheduler.Tests
 
         [TestMethod]
         [ExpectedException(typeof(KeyNotFoundException), "Service keys incorrect for required endpoints")]
-        public async Task TestSetupAsyncWithUniverseDefinitionMissingEndpoints()
+        public async Task Test_Setup_With_Incorrect_ServiceEndpoint_Key()
         {
             var scheduler = new UniverseScheduler(null, new MockServiceProxyFactory(), new MockPlatformAbstraction());
 
@@ -42,7 +42,7 @@ namespace UniverseScheduler.Tests
         }
 
         [TestMethod]
-        public async Task TestSetupAsyncSuccess()
+        public async Task Test_Setup()
         {
             var scheduler = new UniverseScheduler(null, new MockServiceProxyFactory(), new MockPlatformAbstraction());
 
@@ -58,7 +58,7 @@ namespace UniverseScheduler.Tests
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException), "Ensure the event stream has been loaded and the universe definition has been provided.")]
-        public async Task TestSetupAsyncWithNullEventStream()
+        public async Task Test_Setup_With_Null_EventStream()
         {
             var scheduler = new UniverseScheduler(null, new MockServiceProxyFactory(), new MockPlatformAbstraction());
 
@@ -70,7 +70,7 @@ namespace UniverseScheduler.Tests
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException), "Ensure the event stream has been loaded and the universe definition has been provided.")]
-        public async Task TestSetupAsyncWithNullUniverseDefinition()
+        public async Task Test_Setup_With_Null_Definition()
         {
             var scheduler = new UniverseScheduler(null, new MockServiceProxyFactory(), new MockPlatformAbstraction());
 
@@ -82,7 +82,7 @@ namespace UniverseScheduler.Tests
         }
 
         [TestMethod]
-        public async Task TestStartAsyncSuccess()
+        public async Task Test_Start()
         {
             var scheduler = new UniverseScheduler(null, new MockServiceProxyFactory(), new MockPlatformAbstraction());
 

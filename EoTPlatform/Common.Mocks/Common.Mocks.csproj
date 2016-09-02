@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="MockAsyncEnumerable.cs" />
     <Compile Include="MockCloudHub.cs" />
+    <Compile Include="MockCodePackageActivationContext.cs" />
     <Compile Include="MockPlatformAbstraction.cs" />
     <Compile Include="MockReliableDictionary.cs" />
     <Compile Include="MockReliableQueue.cs" />
@@ -75,10 +76,6 @@
     <ProjectReference Include="..\Common\Common.Interfaces.csproj">
       <Project>{0CE24254-3FD9-40F7-BF15-F4B159E029C7}</Project>
       <Name>Common.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MockUniverseFactory\UniverseFactory.Mocks.csproj">
-      <Project>{094BC701-5C55-45D6-A644-AB3EC8F701EE}</Project>
-      <Name>UniverseFactory.Mocks</Name>
     </ProjectReference>
     <ProjectReference Include="..\UniverseActor.Interfaces\UniverseActor.Interfaces.csproj">
       <Project>{390a1835-0b2a-400d-b357-a7b852caaa4f}</Project>
@@ -95,6 +92,10 @@
     <ProjectReference Include="..\UniverseBuilder.Mocks\UniverseBuilder.Mocks.csproj">
       <Project>{13D21C27-50FD-4FFD-A4B7-7C9E620D3D08}</Project>
       <Name>UniverseBuilder.Mocks</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UniverseFactory.Mocks\UniverseFactory.Mocks.csproj">
+      <Project>{094BC701-5C55-45D6-A644-AB3EC8F701EE}</Project>
+      <Name>UniverseFactory.Mocks</Name>
     </ProjectReference>
     <ProjectReference Include="..\UniverseRegistry.Mocks\UniverseRegistry.Mocks.csproj">
       <Project>{5A7C316C-602B-44B6-B684-175D9845AE60}</Project>

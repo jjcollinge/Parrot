@@ -1,69 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Fabric;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.ServiceFabric.Data.Collections;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 using Common.Models;
 using Common.Interfaces;
 using Microsoft.ServiceFabric.Data;
+using Common.Services;
 
 namespace UniverseRegistry
 {
+    /// <summary>
+    /// Stores entries for each currently created universe and their definitions
+    /// </summary>
     public sealed class UniverseRegistry : StatefulService, IUniverseRegistry
     {
-        //TODO: Change read/write behaviour to exception proof
+        private IRegistry registry;
 
         public UniverseRegistry(StatefulServiceContext context, IReliableStateManager stateManager)
             : base(context, stateManager as IReliableStateManagerReplica)
-        { }
+        {
+            this.registry = new Registry(stateManager);
+        }
 
         /// <summary>
         /// Return metadata for all registered universes
         /// </summary>
         /// <returns></returns>
-        public async Task<Dictionary<string, UniverseDefinition>> GetUniversesAsync()
+        public async Task<IDictionary<string, UniverseDefinition>> GetAllUniverseAsync()
         {
-            var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDefinition>>("universes");
-            var universesDictionary = new Dictionary<string, UniverseDefinition>();
-
-            //TODO: Should use immutable types
-            using (var tx = this.StateManager.CreateTransaction())
-            {
-                var enumerable = await universes.CreateEnumerableAsync(tx);
-                var enumerator = enumerable.GetAsyncEnumerator();
-
-                var ct = new CancellationToken();
-                while (await enumerator.MoveNextAsync(ct))
-                {
-                    universesDictionary.Add(enumerator.Current.Key, enumerator.Current.Value);
-                }
-            }
-
-            return universesDictionary;
+            var universes = await registry.GetAllRegisteredItemsAsync<UniverseDefinition>();
+            return universes;
         }
 
         /// <summary>
         /// Register a new universe.
         /// </summary>
-        /// <param name="universe"></param>
+        /// <param name="definition"></param>
         /// <returns></returns>
-        public async Task RegisterUniverseAsync(UniverseDefinition universe)
+        public async Task<bool> RegisterUniverseAsync(string id, UniverseDefinition definition)
         {
-            var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDefinition>>("universes");
-
-            using (var tx = this.StateManager.CreateTransaction())
-            {
-                var alreadyExists = await universes.ContainsKeyAsync(tx, universe.Id);
-                if (!alreadyExists)
-                {
-                    await universes.AddAsync(tx, universe.Id, universe);
-                    await tx.CommitAsync();
-                }
-            }
+            var success = await registry.RegisterAsync<UniverseDefinition>(id, definition);
+            return success;
         }
 
         /// <summary>
@@ -71,15 +50,10 @@ namespace UniverseRegistry
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task DeregisterUniverseAsync(string id)
+        public async Task<bool> DeregisterUniverseAsync(string id)
         {
-            var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDefinition>>("universes");
-
-            using (var tx = this.StateManager.CreateTransaction())
-            {
-                await universes.TryRemoveAsync(tx, id); //TODO: Handle failure
-                await tx.CommitAsync();
-            }
+            var success = await registry.DeregisterAsync<UniverseDefinition>(id);
+            return success;
         }
 
         /// <summary>
@@ -87,18 +61,10 @@ namespace UniverseRegistry
         /// </summary>
         /// <param name="universeId"></param>
         /// <returns></returns>
-        public async Task<UniverseDefinition> GetUniverseAsync(string universeId)
+        public async Task<KeyValuePair<string, UniverseDefinition>> GetUniverseAsync(string universeId)
         {
-            var universes = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, UniverseDefinition>>("universes");
-
-            UniverseDefinition descriptor = null;
-            using (var tx = this.StateManager.CreateTransaction())
-            {
-                var res = await universes.TryGetValueAsync(tx, universeId);
-                if (res.HasValue)
-                    descriptor = res.Value;
-            }
-            return descriptor;
+            var definition = await registry.GetRegisteredItemAsync<UniverseDefinition>(universeId);
+            return definition;
         }
 
         /// <summary>

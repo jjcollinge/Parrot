@@ -48,9 +48,9 @@ namespace UniverseFactory
             // Register the universe
             var universeRegistryAddress = new Uri("fabric:/EoTPlatform/UniverseRegistry");
             var universeRegistry = serviceFactory.CreateUniverseRegistryServiceProxy(universeRegistryAddress);
-            await universeRegistry.RegisterUniverseAsync(universeDefinition);
+            await universeRegistry.RegisterUniverseAsync(universeDefinition.Id, universeDefinition);
 
-            // Return descriptor
+            // Return definition
             return universeDefinition;
         }
 

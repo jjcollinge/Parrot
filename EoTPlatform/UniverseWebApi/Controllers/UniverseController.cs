@@ -11,7 +11,7 @@ namespace UniverseWebApi.Controllers
     public class UniverseController : ApiController
     {
         // GET api/universe 
-        public async Task<Dictionary<string, UniverseDefinition>> GetAsync()
+        public async Task<IDictionary<string, UniverseDefinition>> GetAsync()
         {
             // Return a list of all the universe 
             var universeManagementService = new UniverseManagementService(new ServiceProxyFactory());

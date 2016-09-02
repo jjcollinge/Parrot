@@ -10,7 +10,7 @@ namespace UniverseBuilder.Tests
     public class TestUniverseBuilder
     {
         [TestMethod]
-        public async Task TestBuildUniverseAsync()
+        public async Task Test_Build_Universe()
         {
             var universeTemplate = new UniverseTemplate();
             universeTemplate.Id = "0";
@@ -25,9 +25,10 @@ namespace UniverseBuilder.Tests
             var factory = new MockServiceProxyFactory();
             var universeBuilder = new UniverseBuilder(null, platform, factory);
             var universeDefinition = await universeBuilder.BuildUniverseAsync("eventStreamFilePathpath", universeTemplate);
-            Assert.IsNotNull(universeDefinition);
-            Assert.IsNotNull(universeDefinition.ServiceEndpoints);
-            Assert.IsTrue(universeDefinition.ServiceEndpoints.Count == 2);
+
+            var hasUniverseServiceEndpoints = universeDefinition?.ServiceEndpoints.Count > 0 ? true : false;
+
+            Assert.IsTrue(hasUniverseServiceEndpoints);
         }
     }
 }

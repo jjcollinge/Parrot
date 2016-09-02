@@ -13,7 +13,7 @@ namespace UniverseScheduler.Mocks
 
         public Task SetupAsync(string eventStreamFilePath, UniverseDefinition universeDefinition)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(true);
         }
 
         public Task StartAsync()

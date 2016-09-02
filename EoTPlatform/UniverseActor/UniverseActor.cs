@@ -40,7 +40,7 @@ namespace UniverseActor
             {
                 ActorId = evt.ActorId,
                 OriginalTimeStamp = evt.OriginalTimeStamp,
-                Payload = new KeyValuePair<string, string>(evt.Payload.Key, value.ToString())
+                Payload = new KeyValuePair<string, double>(evt.Payload.Key, value)
             };
             var json = JsonConvert.SerializeObject(newEvt);
             await SendMessageAsync(json);

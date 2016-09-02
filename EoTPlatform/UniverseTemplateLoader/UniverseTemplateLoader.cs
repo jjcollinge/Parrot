@@ -79,7 +79,7 @@ namespace UniverseTemplateLoader
                                 var id = (string)actorTemplate["id"];
                                 var actor = new ActorTemplate(id);
                                 actor.Metadata = JsonConvert.DeserializeObject<Dictionary<string, string>>(actorTemplate["metadata"].ToString());
-                                actor.Transformations = JsonConvert.DeserializeObject<Dictionary<string, ActorTemplateProperty>>(actorTemplate["properties"].ToString());
+                                //actor.Transformations = JsonConvert.DeserializeObject<Dictionary<string, ActorTemplateProperty>>(actorTemplate["properties"].ToString());
                                 actor.Commands = JsonConvert.DeserializeObject<List<string>>(actorTemplate["commands"].ToString());
                                 universeTemplate.ActorTemplates.Add(actor);
                             }

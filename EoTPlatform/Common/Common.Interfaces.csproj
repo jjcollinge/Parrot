@@ -64,8 +64,10 @@
   <ItemGroup>
     <Compile Include="ICloudConnector.cs" />
     <Compile Include="IPlatformAbstraction.cs" />
+    <Compile Include="IRegistry.cs" />
     <Compile Include="IServiceProxyFactory.cs" />
     <Compile Include="IUniverseActorRegistry.cs" />
+    <Compile Include="Registry.cs" />
     <Compile Include="IUniverseFactory.cs" />
     <Compile Include="IUniverseRegistry.cs" />
     <Compile Include="IUniverseScheduler.cs" />

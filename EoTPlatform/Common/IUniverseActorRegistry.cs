@@ -1,21 +1,20 @@
-﻿using Common.Models;
-using Microsoft.ServiceFabric.Actors;
+﻿using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Services.Remoting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UniverseActor.Interfaces;
 
 namespace Common
 {
     public interface IUniverseActorRegistry : IService
     {
-        Task RegisterUniverseActorAsync(string actorIdAsString, ActorId actorId);
-        Task DeregisterUniverseActorAsync(string actorIdAsString);
-        Task RegisterUniverseActorsAsync(IDictionary<string, ActorId> actorIds);
-        Task DeregisterAllUniverseActorsAsync();
-        Task<IDictionary<string, ActorId>> GetRegisteredActorsAsync();
-        Task<KeyValuePair<string, ActorId>> GetRegisteredActorAsync(string actorIdAsString);
+        Task<bool> RegisterUniverseActorAsync(string id, ActorId actor);
+        Task<bool> DeregisterUniverseActorAsync(string id);
+        Task<IDictionary<string, ActorId>> GetAllRegisteredUniverseActorsAsync();
+        Task<KeyValuePair<string, ActorId>> GetRegisteredUniverseActorAsync(string id);
+        Task ClearAllAsync<ActorId>();
     }
 }

@@ -16,7 +16,7 @@ namespace UniverseTemplateLoader.Tests
         private static string invalidFileContent = "invalidTemplate.json";
 
         [TestMethod]
-        public async Task TestLoadUniversalTemplateFromFileAsyncSuccess()
+        public async Task Test_Load_Universal_Template_From_File()
         {
             UniverseTemplateLoader loader = new UniverseTemplateLoader(null);
             var template = await loader.LoadUniversalTemplateFromFileAsync(GetTemplatePath(testFileName));
@@ -27,7 +27,7 @@ namespace UniverseTemplateLoader.Tests
 
         [TestMethod]
         [ExpectedException(typeof(FileNotFoundException), "Invalid file path provided.")]
-        public async Task TestLoadUniversalTemplateFromFileAsyncWithInvalidFilePath()
+        public async Task Test_Load_Universal_Template_From_File_With_Invalid_File_Path()
         {
             UniverseTemplateLoader loader = new UniverseTemplateLoader(null);
             var template = await loader.LoadUniversalTemplateFromFileAsync(GetTemplatePath(invalidFileName));
@@ -35,15 +35,15 @@ namespace UniverseTemplateLoader.Tests
 
         [TestMethod]
         [ExpectedException(typeof(IOException), "Unsupported file type.")]
-        public async Task TestLoadUniversalTemplateFromFileAsyncWithNonSupportedFileType()
+        public async Task Test_Load_Universal_Template_From_File_With_Unsupporte_File_Type()
         {
             UniverseTemplateLoader loader = new UniverseTemplateLoader(null);
             var template = await loader.LoadUniversalTemplateFromFileAsync(GetTemplatePath(UnsupportedFileType));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidDataException), "Unsupported file type.")]
-        public async Task TestLoadUniversalTemplateFromFileAsyncWithInvalidFileContent()
+        [ExpectedException(typeof(InvalidDataException), "Unsupported file format.")]
+        public async Task Test_Load_Universal_Template_From_File_With_Invalid_File_Contents()
         {
             UniverseTemplateLoader loader = new UniverseTemplateLoader(null);
             var template = await loader.LoadUniversalTemplateFromFileAsync(GetTemplatePath(invalidFileContent));
